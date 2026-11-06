@@ -21,6 +21,8 @@ test('calendrier explicite, activités indépendantes, déplacement et rechargem
  page.once('dialog',d=>d.accept());await click(page,'calendar-anchor');
  await page.locator('[data-a="calendar-mode"][data-id="month"]').click();
  await expect(page.locator('.calendar-day')).toHaveCount(42);
+ await expect(page.locator('[data-date="2026-11-02"] .planned-dot')).toBeVisible();
+ await expect(page.locator('[data-date="2026-11-06"] .activity-dot')).toBeVisible();
  await page.locator('[data-date="2026-11-02"]').click();
  await expect(page.locator('.calendar-agenda')).toContainText('Upper Body');
  await expect(page.locator('.calendar-agenda')).not.toContainText('Activité enregistrée');
