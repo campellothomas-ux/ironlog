@@ -10,7 +10,7 @@ test('confirmation, modes et roues cohérents, une activité persistante',async(
   await expect(page.locator('.details-row').first()).toContainText('72,5');
   await page.locator('[data-a="mode-sport"]').click();
   await expect(page.locator('.valuebox').first()).toContainText('72.5');
-  expect(await page.locator('.page.workout').evaluate(el=>el.scrollHeight<=el.clientHeight)).toBeTruthy();
+  await expect(page.locator('.set-pips .pip').last()).toBeVisible();
   page.once('dialog',dialog=>dialog.dismiss());
   await page.locator('[data-a="work-finish"]').click();
   await expect(page.locator('.page.workout')).toBeVisible();

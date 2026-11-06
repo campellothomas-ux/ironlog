@@ -29,3 +29,17 @@ Pour une prévisualisation à la demande : `npm run build`, puis `npx netlify-cl
 ## Validation avant fusion
 
 CI : lint, tests unitaires, build et parcours WebKit. Manuellement sur Safari iPhone : sauvegarde V4 importée, roues tactiles, repos, retour entre modes et fin de séance, vérification après rechargement, partage. Publier en production seulement après validation explicite.
+
+## PR 002 : interface et calendrier
+
+Palette et tailles partagées dans `src/tokens.css`. Le calendrier ne choisit aucune date de départ automatiquement : ouvrir Programme > Planning, choisir le début de la semaine 1 et confirmer. Voir [le modèle et la compatibilité](docs/CALENDAR.md).
+
+Les tests E2E couvrent 375 × 667, 390 × 844, 393 × 852, 430 × 932 et 1280 × 900. `npm run test:e2e` utilise WebKit par défaut. Si seul Chromium système est disponible :
+
+```sh
+IRONLOG_CHROMIUM_PATH=/usr/bin/chromium npm run test:e2e
+TZ=Europe/Paris npm test
+TZ=America/New_York npm test
+```
+
+Cette alternative Chromium ne valide pas Safari. Les captures de tests sont dans `test-results/` ; celles de revue dans `docs/captures/pr002/`.
