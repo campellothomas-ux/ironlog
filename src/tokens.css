@@ -1,7 +1,7 @@
 :root {
  color-scheme: light;
  --bg: #f0eee9; --card: #f7f5f0; --card2: #e6e2da; --line: #c4bfb6;
- --fg: #181715; --muted: #514d48; --accent: #844832; --accent-deep: #844832;
+ --fg: #181715; --muted: #514d48; --accent: #5e4c43; --accent-deep: #5e4c43;
  --sand: #514d48; --red: #8c342b; --blue: #514d48; --on-accent: #f4efe7;
  --dark: #201d1a; --terracotta: #a45f49; --cream: #f4efe7;
  --radius: 0px; --radius-sm: 0px; --radius-lg: 0px;

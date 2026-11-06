@@ -4,7 +4,7 @@ L'interface associe des surfaces claires, des filets et une grille dense aux usa
 
 ## Couleurs
 
-Tokens définis dans `src/tokens.css` : fond `#f0eee9`, surface `#f7f5f0`, surface secondaire `#e6e2da`, texte `#181715`, texte secondaire `#514d48`, filet `#c4bfb6`, primaire `#201d1a`, texte primaire `#f4efe7`, accent foncé `#844832`, terracotta `#a45f49`. Les contrastes des associations principales sont couverts par `tests/contrast.test.ts`. Les accents portent la progression et la sélection ; les actions principales sont sombres.
+Tokens définis dans `src/tokens.css` : fond `#f0eee9`, surface `#f7f5f0`, surface secondaire `#e6e2da`, texte `#181715`, texte secondaire `#514d48`, filet `#c4bfb6`, primaire `#201d1a`, texte primaire `#f4efe7`, accent foncé `#5e4c43`, terracotta `#a45f49`. Les contrastes des associations principales sont couverts par `tests/contrast.test.ts`. Les accents portent la progression et la sélection ; les actions principales sont sombres.
 
 ## Typographie
 
