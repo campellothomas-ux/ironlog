@@ -145,7 +145,7 @@ a { color:var(--accent) }
 .rest-controls .btn { min-height:62px;font-size:15px }
 .rest-quick { display:flex;gap:8px;flex-wrap:wrap;justify-content:center }
 .rest-quick button { border:1px solid var(--line);border-radius:0;background:var(--card2);color:var(--fg);padding:9px 12px;font-size:13px }
-.toast { position:absolute;bottom:calc(var(--nav-height) + 8px);left:16px;right:16px;z-index:55;background:var(--card2);border:1px solid var(--accent-deep);color:var(--fg);border-radius:var(--radius-sm);padding:12px;text-align:center;font-size:13px;font-weight:600;box-shadow:var(--shadow) }
+.toast { pointer-events:none;position:absolute;bottom:calc(var(--nav-height) + 8px);left:16px;right:16px;z-index:55;background:var(--card2);border:1px solid var(--accent-deep);color:var(--fg);border-radius:var(--radius-sm);padding:12px;text-align:center;font-size:13px;font-weight:600;box-shadow:var(--shadow) }
 .formgrid { display:grid;grid-template-columns:1fr 1fr;gap:10px }
 .field { display:flex;flex-direction:column;gap:6px }
 .field label { color:var(--muted);font-size:11px;font-weight:800 }
