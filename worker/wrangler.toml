@@ -1,0 +1,21 @@
+name = "ironlog-push-prototype"
+main = "src/index.ts"
+compatibility_date = "2025-04-01"
+workers_dev = true
+
+[durable_objects]
+bindings = [
+  { name = "INSTALLATIONS", class_name = "Installation" },
+  { name = "PAIRING", class_name = "PairingGate" }
+]
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Installation", "PairingGate"]
+
+# Non-secret configuration: set to the exact HTTPS deploy-preview origin.
+[vars]
+ALLOWED_ORIGINS = ""
+VAPID_PUBLIC_KEY = ""
+VAPID_SUBJECT = ""
+# PAIRING_CODE and VAPID_PRIVATE_KEY must be configured with wrangler secret put.
