@@ -1,5 +1,6 @@
 import { parseDate } from '../planning/dates';
 import { persist, type StorageWriter } from '../storage';
+import { restoreTimer } from '../workout/rest-timer';
 
 type RecordValue = Record<string, unknown>;
 export interface Backup { app: 'IronLog'; formatVersion: 1; createdAt: string; data: RecordValue }
@@ -31,7 +32,7 @@ export function validateState(input:unknown):RecordValue {
   const week=number(data.week,'Semaine active');if(!Number.isInteger(week)||week<1)throw Error('Semaine active invalide.');
   const prefs=object(data.prefs,'Préférences');string(prefs.profile,'Profil');if(prefs.mode!=='sport'&&prefs.mode!=='detail')throw Error('Mode de séance invalide.');
   array(data.history,'Historique').forEach((h,i)=>{const p=`Activité ${i+1}`,a=session(h,p);number(a.finishedAt,`${p} : date`);number(a.duration,`${p} : durée`);if(!Number.isFinite(new Date(a.finishedAt as number).getTime()))throw Error(`${p} : date invalide.`);});
-  if(data.workout!==null&&data.workout!==undefined){const w=session(data.workout,'Séance en cours');number(w.startedAt,'Séance en cours : début');const index=number(w.exIndex,'Séance en cours : exercice courant');if(!Number.isInteger(index)||index>=array(w.exercises,'Exercices').length)throw Error('Séance en cours : exercice courant invalide.');}
+  if(data.workout!==null&&data.workout!==undefined){const w=session(data.workout,'Séance en cours');number(w.startedAt,'Séance en cours : début');const index=number(w.exIndex,'Séance en cours : exercice courant');if(!Number.isInteger(index)||index>=array(w.exercises,'Exercices').length)throw Error('Séance en cours : exercice courant invalide.');if(w.restTimer!==undefined&&!restoreTimer(w.restTimer,w.startedAt as number))throw Error('Séance en cours : chronomètre invalide.');}
   if(data.calendar!==undefined){const calendar=object(data.calendar,'Planning');for(const [id,value] of Object.entries(calendar)){const entry=object(value,`Planning ${id}`);date(entry.startDate,`Planning ${id} : début`);const moves=object(entry.moves,`Planning ${id} : déplacements`);for(const [key,value] of Object.entries(moves))date(value,`Déplacement ${key}`);}}
   return data;
 }

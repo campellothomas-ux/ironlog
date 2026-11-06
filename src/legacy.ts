@@ -6,6 +6,7 @@ import { renderCalendar } from './planning/view';
 import { dateKey, addDays, monday, shiftMonth, dateLabel } from './planning/dates';
 import { plannedSessions, setStart, moveOccurrence } from './planning/model';
 import { persist } from './storage';
+import { startRestTimer, remainingMs, reconcile, pause, resume, adjust, restoreTimer } from './workout/rest-timer';
 import { completeWorkout } from "./workout/complete";
 
 'use strict';
@@ -48,7 +49,8 @@ try {
 let lastPersisted=clone(db), pendingBackup=null;
 let ui={nav:'home',modal:null,wheel:null,photo:null,shareMode:'poster',shareFormat:'story',shareActivityId:null,editDraft:null,editPlanId:null,editWeek:0,editSessionId:null,scope:'week',replaceIndex:0,selectedMuscle:null,toastTimer:null};
 let calendarView={mode:'week',selected:dateKey(new Date())};
-let rest={active:false,paused:false,minimized:false,remaining:0,until:0};
+let rest={active:false,paused:false,minimized:false,remaining:0,completed:false,timer:null};
+let restStorageFailed=false, audioContext=null;
 function save(){
  try {if(recovery)throw Error('Stockage en mode récupération.');persist(localStorage,db);lastPersisted=clone(db)}
  catch(e){db=clone(lastPersisted);render();throw Error('Enregistrement impossible. Les dernières données enregistrées sont conservées. Vérifie l’espace disponible puis réessaie.')}
@@ -71,16 +73,47 @@ function activeEx(){return db.workout?.exercises?.[db.workout.exIndex]};
 function currentSetIndex(e){const w=db.workout;const selected=w?.focusSet;if(Number.isInteger(selected)&&e.sets[selected]&&!e.sets[selected].done)return selected;const next=e.sets.findIndex(s=>!s.done);return next<0?e.sets.length-1:next;}
 function hydrateWorkout(s){let w=clone(s);w.exercises.forEach(e=>e.sets.forEach((s,i)=>{s.done=false;let h=lastSet(e.name,i);if(h){s.kg=h.kg;s.reps=h.reps}}));return {...w,programId:plan()?.id,week:db.week,startedAt:Date.now(),exIndex:0,focusSet:null,mode:db.prefs.mode};}
 function startWorkout(id){const src=sessions().find(s=>s.id===id)||selectedSession();if(!src)return toast('Ajoute une séance au programme');if(db.workout&&!confirm('Recommencer et remplacer la séance en cours ?'))return;db.workout=hydrateWorkout(src);ui.nav='workout';ui.modal=null;stopRest();save();render();}
-function stopRest(){rest.active=false;rest.paused=false;rest.remaining=0;rest.minimized=false;rest.until=0;renderRestBanner()}
-function startRest(seconds){const n=Math.max(0,Number(seconds)||0);if(!n){stopRest();return}rest={active:true,remaining:n,until:Date.now()+n*1000,paused:false,minimized:false};ui.modal='rest';renderModal();renderRestBanner();}
-function tick(){if(rest.active&&!rest.paused){rest.remaining=Math.max(0,Math.ceil((rest.until-Date.now())/1000));if(rest.remaining<=0){stopRest();if(ui.modal==='rest'){ui.modal=null;renderModal()}toast('Repos terminé')}}const t=$('[data-resttime]');if(t)t.textContent=fmtSec(rest.remaining);renderRestBanner(false)}
-function renderRestBanner(){const el=$('#restbanner');if(!el)return;if(rest.active&&rest.minimized){el.style.display='flex';el.innerHTML=`<div><div class="ey">REPOS EN COURS</div><span class="num" data-resttime>${fmtSec(rest.remaining)}</span></div><div class="row"><button data-a="rest-open">Agrandir</button><button data-a="rest-skip">Passer</button></div>`}else el.style.display='none'}
+function syncRest(){
+ const t=db.workout?restoreTimer(db.workout.restTimer,db.workout.startedAt):null;
+ rest={timer:t,active:!!t&&(t.status==='active'||t.status==='paused'),paused:t?.status==='paused',minimized:!!t?.minimized,remaining:t?Math.ceil(remainingMs(t)/1000):0,completed:t?.status==='completed'};
+}
+function commitRest(timer){
+ if(!db.workout)return;
+ if(timer)db.workout.restTimer=timer;else delete db.workout.restTimer;
+ try{save();restStorageFailed=false;syncRest()}catch(err){syncRest();render();throw err}
+}
+function stopRest(){if(db.workout?.restTimer)commitRest(null);else syncRest();renderRestBanner()}
+function startRest(seconds){
+ const n=Math.max(0,Number(seconds)||0);if(!n){stopRest();return}
+ const id=globalThis.crypto?.randomUUID?.()||`${Date.now()}_${Math.random().toString(36).slice(2)}`;
+ commitRest(startRestTimer(id,db.workout.startedAt,n));ui.modal='rest';renderModal();renderRestBanner();
+}
+function playRestSound(){
+ if(!db.prefs.restSound||!audioContext||document.visibilityState!=='visible')return;
+ try{if(audioContext.state!=='running')return;const oscillator=audioContext.createOscillator(),gain=audioContext.createGain();oscillator.frequency.value=660;gain.gain.setValueAtTime(.08,audioContext.currentTime);gain.gain.exponentialRampToValueAtTime(.001,audioContext.currentTime+.35);oscillator.connect(gain);gain.connect(audioContext.destination);oscillator.start();oscillator.stop(audioContext.currentTime+.35)}catch(e){console.warn('Son indisponible',e)}
+}
+function tick(){
+ if(recovery)return;
+ syncRest();const timer=rest.timer;
+ if(timer?.status==='active'&&remainingMs(timer)===0&&!restStorageFailed){
+   try{commitRest(reconcile(timer));if(ui.modal==='rest'){ui.modal=null;renderModal()}renderRestBanner();toast('REPOS TERMINÉ');playRestSound()}
+   catch(err){restStorageFailed=true;toast('Impossible d’enregistrer la fin du repos. Vérifie le stockage.')}
+ }
+ const t=$('[data-resttime]');if(t)t.textContent=fmtSec(rest.remaining);renderRestBanner();
+}
+function renderRestBanner(){
+ const el=$('#restbanner');if(!el)return;
+ if(rest.completed){el.style.display='flex';el.innerHTML=`<div><b>REPOS TERMINÉ</b><div class="hint">Reprends ta séance.</div></div><button data-a="rest-skip">Fermer</button>`}
+ else if(rest.active&&rest.minimized){el.style.display='flex';el.innerHTML=`<div><div class="ey">${rest.paused?'REPOS EN PAUSE':'REPOS EN COURS'}</div><span class="num" data-resttime>${fmtSec(rest.remaining)}</span></div><div class="row"><button data-a="rest-open">Agrandir</button><button data-a="rest-skip">Passer</button></div>`}
+ else el.style.display='none';
+}
 function validateSet(exi,si){const w=db.workout;if(!w)return;let e=w.exercises[exi],s=e?.sets[si];if(!s)return;if(s.done){s.done=false;w.exIndex=exi;save();render();return} s.done=true;w.exIndex=exi;let idx=e.sets.findIndex(z=>!z.done);if(idx<0){if(exi<w.exercises.length-1){w.exIndex=exi+1;w.focusSet=null;const after=w.exercises[w.exIndex];toast(`Exercice suivant : ${after.name}`)}else{toast('Toutes les séries sont validées. Termine la séance quand tu es prêt.')} }else{w.exIndex=exi;w.focusSet=e.sets.findIndex((z,k)=>k>si&&!z.done);if(w.focusSet<0)w.focusSet=e.sets.findIndex(z=>!z.done)}save();render();if(s.rest&&(!allDone(e)||exi<w.exercises.length-1))startRest(s.rest)}
 function finishWorkout(){
  const w=db.workout;if(!w)return;
  if(!confirm(`Terminer « ${w.name} » ? Les séances enregistrées ne sont plus modifiables.`))return;
  try {
-   const result=completeWorkout(db,localStorage);
+   const stateForCompletion={...db,workout:{...db.workout}};delete stateForCompletion.workout.restTimer;
+   const result=completeWorkout(stateForCompletion,localStorage);
    db=result.state;lastPersisted=clone(db);
    stopRest();ui.nav='you';db.youTab='activities';ui.modal=null;
    render();toast('Séance enregistrée dans tes activités');
@@ -132,7 +165,7 @@ function render(){if(recovery){$('#viewport').innerHTML=`<div class="page"><div 
 function overlay(title,content,footer='',extra=''){return `<div class="overlay ${extra}" role="dialog" aria-modal="true"><div class="overlayhead"><div class="smallhead">${title}</div><button class="btn icon" data-a="modal-close" aria-label="Fermer">×</button></div><div class="overlaybody">${content}</div>${footer?`<div class="overlayfoot">${footer}</div>`:''}</div>`}
 function editorForm(){let s=ui.editDraft;if(!s)return'';return `<div class="field" style="margin-bottom:12px"><label>Nom de la séance</label><input data-ed="sessionname" value="${escAttr(s.name)}" style="width:100%"></div><div class="field" style="margin-bottom:14px"><label>Jour prévu</label><select data-ed="sessionday" style="width:100%">${days.map(d=>`<option ${d===s.day?'selected':''}>${d}</option>`).join('')}</select></div><div class="ey" style="margin:15px 0">EXERCICES · MODIFICATION LIBRE</div>${s.exercises.map((e,i)=>`<div class="edit-ex"><div class="row between" style="margin-bottom:8px"><b class="accent tiny">EXERCICE ${i+1}</b><div class="row updown" style="gap:4px"><button data-a="edit-up" data-i="${i}" aria-label="Monter" ${i===0?'disabled':''}>↑</button><button data-a="edit-down" data-i="${i}" aria-label="Descendre" ${i===s.exercises.length-1?'disabled':''}>↓</button><button data-a="edit-delete-ex" data-i="${i}" aria-label="Supprimer" style="color:var(--red)">×</button></div></div><select data-ed="exname" data-i="${i}" style="width:100%;margin-bottom:6px">${[...new Set([e.name,...library.map(x=>x.name)])].map(n=>`<option value="${escAttr(n)}" ${e.name===n?'selected':''}>${safe(n)}</option>`).join('')}</select><div class="row between" style="margin-top:9px"><span class="ey">KG</span><span class="ey">REPS</span><span class="ey">REPOS (s)</span><span class="ey">−</span></div>${e.sets.map((z,j)=>`<div class="edit-set"><input type="number" inputmode="decimal" min="0" step="0.5" data-ed="set" data-i="${i}" data-j="${j}" data-f="kg" value="${z.kg}" aria-label="Kilos série ${j+1}"><input type="number" inputmode="numeric" min="0" max="200" step="1" data-ed="set" data-i="${i}" data-j="${j}" data-f="reps" value="${z.reps}" aria-label="Répétitions série ${j+1}"><input type="number" inputmode="numeric" min="0" max="1200" step="5" data-ed="set" data-i="${i}" data-j="${j}" data-f="rest" value="${z.rest}" aria-label="Repos série ${j+1}"><button data-a="edit-delete-set" data-i="${i}" data-j="${j}" aria-label="Supprimer la série">×</button></div>`).join('')}<button class="btn mini outline block" style="margin-top:9px" data-a="edit-add-set" data-i="${i}">＋ Ajouter une série</button></div>`).join('')}<div class="card"><div class="ey">AJOUTER UN EXERCICE</div><select id="editor-add-list" style="width:100%;margin:10px 0">${library.map(x=>`<option value="${escAttr(x.name)}">${safe(x.name)}</option>`).join('')}</select><button class="btn primary block" data-a="edit-add-ex">＋ Ajouter cet exercice</button><div class="muted tiny" style="margin:12px 0 6px">Ou créer un exercice personnalisé</div><div class="row"><input id="editor-custom-ex" placeholder="Nom du nouvel exercice" style="flex:1;width:40px"><button class="btn mini" data-a="edit-custom-ex">Ajouter</button></div></div>`}
 function renderModal(){const root=$('#modalroot');if(!ui.modal){root.innerHTML='';return}let html='';const w=db.workout;
-if(ui.modal==='rest'){html=`<div class="overlay rest-overlay" role="dialog" aria-modal="true"><div class="overlayhead"><div class="smallhead">REPOS MUSCULAIRE</div><button class="btn" data-a="rest-minimize">↙ Réduire</button></div><div class="rest-main"><div class="section-eyebrow">RÉCUPÉRATION EN COURS</div><div class="rest-time num" data-resttime>${fmtSec(rest.remaining)}</div><div class="rest-sub">${safe(activeEx()?.name||'Exercice suivant')}</div><div class="rest-controls"><button class="btn primary" data-a="rest-toggle">${rest.paused?'▶ REPRENDRE':'Ⅱ PAUSE'}</button><button class="btn outline" data-a="rest-skip">PASSER →</button></div><div class="rest-quick"><button data-a="rest-add" data-n="-15">−15 s</button><button data-a="rest-add" data-n="15">＋15 s</button><button data-a="rest-add" data-n="30">＋30 s</button></div><div class="hint" style="text-align:center">Tu peux réduire ce chrono en bandeau sans l'arrêter.</div></div></div>`}
+if(ui.modal==='rest'){html=`<div class="overlay rest-overlay" role="dialog" aria-modal="true"><div class="overlayhead"><div class="smallhead">REPOS MUSCULAIRE</div><button class="btn" data-a="rest-minimize">↙ Réduire</button></div><div class="rest-main"><div class="section-eyebrow">RÉCUPÉRATION EN COURS</div><div class="rest-time num" data-resttime>${fmtSec(rest.remaining)}</div><div class="rest-sub">${safe(activeEx()?.name||'Exercice suivant')}</div><div class="rest-controls"><button class="btn primary" data-a="rest-toggle">${rest.paused?'▶ REPRENDRE':'Ⅱ PAUSE'}</button><button class="btn outline" data-a="rest-skip">PASSER →</button></div><div class="rest-quick"><button data-a="rest-add" data-n="-30">−30 s</button><button data-a="rest-add" data-n="-15">−15 s</button><button data-a="rest-add" data-n="15">＋15 s</button><button data-a="rest-add" data-n="30">＋30 s</button></div><button class="btn outline" data-a="rest-sound" aria-pressed="${!!db.prefs.restSound}">SON : ${db.prefs.restSound?'ACTIVÉ':'DÉSACTIVÉ'}</button><div class="hint" style="text-align:center">Le son fonctionne uniquement si le navigateur l’autorise et si l’application est visible.</div></div></div>`}
 if(ui.modal==='wheel'){let opt=wheelOptions(ui.wheel.field),val=ui.wheel.value,idx=closestWheelIndex(opt,val);html=`<div class="sheetwrap" role="dialog" aria-modal="true"><div class="sheet"><div class="sheethead"><div><div class="ey">MODIFIER LA VALEUR</div><div class="smallhead" style="margin-top:6px">${({kg:'CHARGE',reps:'RÉPÉTITIONS',rest:'REPOS'})[ui.wheel.field]}</div></div><button class="btn icon" data-a="wheel-cancel">×</button></div><div style="position:relative"><div class="wheel" id="wheelList" role="listbox" aria-label="Sélecteur de valeur"><div class="wheel-spacer"></div>${opt.map((n,i)=>`<div class="wheel-opt ${i===idx?'selected':''}" role="option" aria-selected="${i===idx}" data-index="${i}">${ui.wheel.field==='rest'?fmtSec(n):fnum(n)}</div>`).join('')}<div class="wheel-spacer"></div></div><div class="wheel-line"></div></div><div class="row" style="margin-top:12px"><input type="number" id="wheel-direct" step="${ui.wheel.field==='kg'?'0.5':ui.wheel.field==='reps'?'1':'5'}" min="0" max="${ui.wheel.field==='kg'?'300':ui.wheel.field==='reps'?'100':'1200'}" inputmode="decimal" value="${val}" style="width:105px" aria-label="Saisie précise"><button class="btn primary" data-a="wheel-save" style="flex:1">✓ VALIDER ${ui.wheel.field==='rest'?fmtSec(val):fnum(val)}</button></div><div class="hint" style="margin-top:9px">Fais glisser la roue verticalement ou saisis une valeur précise.</div></div></div>`}
 if(ui.modal==='info'){let e=activeEx(),prior=db.history.flatMap(h=>h.exercises.filter(x=>x.name===e.name).map(x=>({h,x})));html=overlay('FICHE EXERCICE',`<div class="section-eyebrow">CONSEILS TECHNIQUES</div><h1 class="title">${safe(e.name)}</h1><div class="card"><b>MUSCLES PRINCIPAUX</b><p class="muted sm" style="margin-top:9px">${safe(e.primary.join(' · '))}</p><div class="divider"></div><b>SECONDAIRES</b><p class="muted sm" style="margin-top:9px">${safe(e.secondary.join(' · ')||'—')}</p></div><div class="card soft"><h2 class="smallhead">CONSEILS</h2><p class="sm" style="line-height:1.7;margin-top:14px">${safe(e.tip)}</p></div><div class="card"><h2 class="smallhead">DERNIÈRES PERFORMANCES</h2>${prior.length?prior.slice(-5).reverse().map(o=>`<p class="sm" style="margin-top:11px">${fmtDate(o.h.finishedAt)} · ${safe(o.x.sets.filter(z=>z.done).map(z=>`${fnum(z.kg)} kg × ${z.reps}`).join(' / '))}</p>`).join(''):'<p class="muted sm" style="margin-top:10px">Pas encore de performance enregistrée.</p>'}</div>`,`<button class="btn primary block" data-a="modal-close">RETOURNER À MA SÉANCE</button>`)}
 if(ui.modal==='replace'){html=overlay('REMPLACER L’EXERCICE',`<div class="hint">Ce remplacement s'applique uniquement à la séance en cours et ne modifie pas le programme.</div><div style="margin-top:14px">${library.map((x,i)=>`<div class="programitem" data-a="replace-pick" data-i="${i}" role="button" tabindex="0"><b>${safe(x.name)}</b><div class="muted tiny" style="margin-top:6px">${safe(x.primary.join(' · '))}</div></div>`).join('')}</div>`)}
@@ -203,12 +236,17 @@ case 'replace-ex':ui.modal='replace';renderModal();break;
 case 'replace-pick':{let e=activeEx(),l=library[i];if(!e||!l)break;const old=e.name;e.name=l.name;e.primary=clone(l.primary);e.secondary=clone(l.secondary);e.tip=l.tip;let h=lastSet(l.name,0);if(h)e.sets.forEach((z,j)=>{let t=lastSet(l.name,j);z.kg=t?.kg??h.kg;z.reps=t?.reps??h.reps});ui.modal=null;save();render();toast(`${old} remplacé par ${l.name}`);break}
 case 'add-set':addSet();break;
 case 'remove-set':removeSet();break;
-case 'rest-minimize':rest.minimized=true;ui.modal=null;renderModal();renderRestBanner();break;
-case 'rest-open':rest.minimized=false;ui.modal='rest';renderModal();renderRestBanner();break;
+case 'rest-minimize':if(rest.timer){commitRest({...rest.timer,minimized:true});ui.modal=null;renderModal();renderRestBanner()}break;
+case 'rest-open':if(rest.timer){commitRest({...rest.timer,minimized:false});ui.modal='rest';renderModal();renderRestBanner()}break;
 case 'rest-skip':stopRest();ui.modal=null;renderModal();break;
-case 'rest-toggle':{if(rest.paused){rest.until=Date.now()+rest.remaining*1000;rest.paused=false}else rest.paused=true;renderModal();break}
-case 'rest-add':rest.remaining=Math.max(0,rest.remaining+Number(el.dataset.n));rest.until=Date.now()+rest.remaining*1000;renderModal();break;
-case 'modal-close':if(ui.modal==='rest'&&rest.active){rest.minimized=true}else{ui.modal=null}renderModal();renderRestBanner();break;
+case 'rest-toggle':if(rest.timer){commitRest(rest.paused?resume(rest.timer):pause(rest.timer));if(rest.completed){ui.modal=null;renderModal();renderRestBanner();toast('REPOS TERMINÉ');playRestSound()}else renderModal()}break;
+case 'rest-add':if(rest.timer){commitRest(adjust(rest.timer,Number(el.dataset.n)));if(rest.completed){ui.modal=null;renderModal();renderRestBanner();toast('REPOS TERMINÉ');playRestSound()}else renderModal()}break;
+case 'rest-sound':{
+ const enabled=!db.prefs.restSound;
+ if(enabled){const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio){toast('Son indisponible dans ce navigateur.');break}audioContext=audioContext||new Audio();audioContext.resume().catch(()=>{});}
+ db.prefs.restSound=enabled;save();renderModal();break;
+}
+case 'modal-close':if(ui.modal==='rest'&&rest.active){commitRest({...rest.timer,minimized:true})}ui.modal=null;renderModal();renderRestBanner();break;
 case 'open-plan':db.progPlanId=el.dataset.plan;db.progView='detail';save();render();break;
 case 'program-back':db.progView='landing';save();render();break;
 case 'calendar-mode':calendarView.mode=id==='month'?'month':'week';render();break;
@@ -262,7 +300,7 @@ case 'export-all':exportFile(makeBackup(db),backupName());toast('Téléchargemen
 case 'import-backup':ui.modal='importBackup';renderModal();break;
 case 'backup-load':{const f=$('#backup-file')?.files?.[0];if(!f)throw Error('Sélectionne un fichier JSON.');if(f.size>20_000_000)throw Error('Fichier trop volumineux (20 Mo maximum).');pendingBackup=parseBackup(await f.text());ui.modal='backupPreview';renderModal();break}
 case 'backup-cancel':pendingBackup=null;ui.modal=null;render();break;
-case 'backup-restore':{if(!pendingBackup)break;if(!confirm('Remplacer toutes les données locales par cette sauvegarde ? Cette opération ne peut pas être annulée sans sauvegarde externe.'))break;let next;try{next=restoreBackup(localStorage,pendingBackup.data)}catch(err){if(err?.name==='QuotaExceededError')throw err;throw Error('Restauration impossible : le stockage est inaccessible. Les données précédentes sont conservées.')}db=next;lastPersisted=clone(db);recovery=null;rawStored=null;pendingBackup=null;ui.modal=null;ui.nav='home';stopRest();render();toast('Sauvegarde restaurée sur cet appareil');break}
+case 'backup-restore':{if(!pendingBackup)break;if(!confirm('Remplacer toutes les données locales par cette sauvegarde ? Cette opération ne peut pas être annulée sans sauvegarde externe.'))break;let next;try{next=restoreBackup(localStorage,pendingBackup.data)}catch(err){if(err?.name==='QuotaExceededError')throw err;throw Error('Restauration impossible : le stockage est inaccessible. Les données précédentes sont conservées.')}db=next;lastPersisted=clone(db);recovery=null;rawStored=null;pendingBackup=null;ui.modal=null;ui.nav='home';syncRest();if(rest.active&&!rest.minimized)ui.modal='rest';render();tick();toast('Sauvegarde restaurée sur cet appareil');break}
 case 'recovery-export':if(rawStored!==null){exportFile(rawStored,'ironlog-donnees-brutes.txt','text/plain');toast('Téléchargement demandé. Vérifie le fichier dans Fichiers.')}break;
 case 'recovery-reset':{if(!confirm('Effacer les données locales illisibles et repartir de zéro ? Exporte d’abord les données brutes si possible.'))break;const next=initial();persist(localStorage,next);db=next;lastPersisted=clone(db);recovery=null;rawStored=null;ui.nav='home';ui.modal=null;render();toast('Données réinitialisées');break}
 
@@ -317,5 +355,7 @@ document.addEventListener('scroll',e=>{if(e.target.id==='wheelList')updateWheel(
 document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('[role="button"][data-a]')){e.preventDefault();handleAction(e.target)}if(e.key==='Escape'&&ui.modal&&ui.modal!=='rest'){ui.modal=null;renderModal()}});
 let startTouch=null;document.addEventListener('touchstart',e=>{if(!e.target.closest('#workout-swipe')||e.target.closest('.exercise-list')||e.target.closest('.valuebox')||e.target.closest('.details-rows')){startTouch=null;return}startTouch={x:e.touches[0].clientX,y:e.touches[0].clientY}},{passive:true});
 document.addEventListener('touchend',e=>{if(!startTouch||!db.workout||ui.modal)return;let dx=e.changedTouches[0].clientX-startTouch.x,dy=e.changedTouches[0].clientY-startTouch.y;if(Math.abs(dx)>65&&Math.abs(dx)>Math.abs(dy)*1.35)setExercise(db.workout.exIndex+(dx<0?1:-1));startTouch=null},{passive:true});
-setInterval(tick,250);render();
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){restStorageFailed=false;tick()}});
+window.addEventListener('pageshow',()=>{restStorageFailed=false;tick()});
+syncRest();if(rest.active&&!rest.minimized)ui.modal='rest';render();tick();setInterval(tick,250);
 

@@ -2,6 +2,7 @@ import { describe,it,expect,vi } from 'vitest';
 import { makeBackup,parseBackup,restoreBackup,backupName,validateState } from '../src/backup/backup';
 import { KEY } from '../src/storage';
 import { sampleState } from './fixtures/backup';
+import { startRestTimer } from '../src/workout/rest-timer';
 describe('sauvegarde et restauration',()=>{
  it('exporte un état complet et préserve exactement toutes ses données',()=>{
   const state=sampleState();const backup=makeBackup(state,new Date('2026-11-06T21:15:00Z'));
@@ -9,6 +10,12 @@ describe('sauvegarde et restauration',()=>{
   const parsed=parseBackup(JSON.stringify(backup));expect(parsed.data).toEqual(state);
   expect(makeBackup(parsed.data).data).toEqual(state);
   expect(backupName(new Date(2026,10,6,22,15))).toBe('ironlog-backup-2026-11-06-2215.json');
+ });
+ it('préserve le chrono lié à la séance dans une sauvegarde complète',()=>{
+  const state=sampleState();const timer=startRestTimer('cycle_1',state.workout.startedAt,90,1760000000000);
+  const withTimer={...state,workout:{...state.workout,restTimer:timer}};
+  expect(parseBackup(JSON.stringify(makeBackup(withTimer))).data).toEqual(withTimer);
+  expect(()=>parseBackup(JSON.stringify(makeBackup({...state,workout:{...state.workout,restTimer:{...timer,workoutStartedAt:1}}})))).toThrow('chronomètre');
  });
  it('accepte la sauvegarde V4 et l’ancien état brut, sans normalisation',()=>{
   const state=sampleState();expect(parseBackup(JSON.stringify({app:'IronLog V4',version:4,data:state})).data).toEqual(state);
