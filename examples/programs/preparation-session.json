@@ -1,0 +1,62 @@
+{
+  "kind": "ironlog-programs",
+  "formatVersion": 1,
+  "programs": [
+    {
+      "name": "Exemple préparation",
+      "description": "Exemple fictif",
+      "weeks": [
+        {
+          "sessions": [
+            {
+              "logicalKey": "lower-body",
+              "name": "Lower Body",
+              "day": "Mercredi",
+              "warmupExercises": [
+                {
+                  "name": "Mobilité des chevilles",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 45,
+                  "note": "Mouvement contrôlé."
+                },
+                {
+                  "name": "Squats sans charge",
+                  "type": "activation",
+                  "sets": 2,
+                  "reps": 10,
+                  "rest": 20
+                }
+              ],
+              "exercises": [
+                {
+                  "name": "Hip thrust",
+                  "sets": [
+                    {
+                      "kg": 35,
+                      "reps": 8,
+                      "rest": 120
+                    },
+                    {
+                      "kg": 35,
+                      "reps": 8,
+                      "rest": 120
+                    }
+                  ]
+                }
+              ],
+              "cooldownExercises": [
+                {
+                  "name": "Respiration",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 120
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

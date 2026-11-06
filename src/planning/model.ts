@@ -1,5 +1,5 @@
 import { addDays, dateKey, monday, parseDate } from './dates';
-export interface Session { id:string;name:string;day:string;exercises:unknown[] }
+export interface Session { id:string;name:string;day:string;exercises:unknown[];warmupExercises?:unknown[];cooldownExercises?:unknown[] }
 export interface Program {id:string;name:string;weeks:{sessions:Session[]}[]}
 export interface Schedule {startDate:string;moves:Record<string,string>}
 export type Calendar = Record<string,Schedule>;

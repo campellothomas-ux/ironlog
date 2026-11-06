@@ -1,0 +1,1149 @@
+{
+  "kind": "ironlog-programs",
+  "formatVersion": 1,
+  "programs": [
+    {
+      "name": "Exemple huit semaines",
+      "description": "Exemple fictif",
+      "startDate": "2026-11-02",
+      "weeks": [
+        {
+          "sessions": [
+            {
+              "logicalKey": "upper",
+              "name": "Upper",
+              "day": "Lundi",
+              "warmupExercises": [
+                {
+                  "name": "Mobilité des chevilles",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 45,
+                  "note": "Mouvement contrôlé."
+                },
+                {
+                  "name": "Squats sans charge",
+                  "type": "activation",
+                  "sets": 2,
+                  "reps": 10,
+                  "rest": 20
+                }
+              ],
+              "exercises": [
+                {
+                  "name": "Hip thrust",
+                  "sets": [
+                    {
+                      "kg": 40.0,
+                      "reps": 8,
+                      "rest": 120
+                    },
+                    {
+                      "kg": 40.0,
+                      "reps": 8,
+                      "rest": 120
+                    }
+                  ]
+                }
+              ],
+              "cooldownExercises": [
+                {
+                  "name": "Respiration",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 120
+                }
+              ]
+            },
+            {
+              "logicalKey": "lower",
+              "name": "Lower",
+              "day": "Mercredi",
+              "warmupExercises": [
+                {
+                  "name": "Mobilité des chevilles",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 45,
+                  "note": "Mouvement contrôlé."
+                },
+                {
+                  "name": "Squats sans charge",
+                  "type": "activation",
+                  "sets": 2,
+                  "reps": 10,
+                  "rest": 20
+                }
+              ],
+              "exercises": [
+                {
+                  "name": "Hip thrust",
+                  "sets": [
+                    {
+                      "kg": 30.0,
+                      "reps": 8,
+                      "rest": 120
+                    },
+                    {
+                      "kg": 30.0,
+                      "reps": 8,
+                      "rest": 120
+                    }
+                  ]
+                }
+              ],
+              "cooldownExercises": [
+                {
+                  "name": "Respiration",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 120
+                }
+              ]
+            },
+            {
+              "logicalKey": "full-body",
+              "name": "Full Body",
+              "day": "Samedi",
+              "warmupExercises": [
+                {
+                  "name": "Mobilité des chevilles",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 45,
+                  "note": "Mouvement contrôlé."
+                },
+                {
+                  "name": "Squats sans charge",
+                  "type": "activation",
+                  "sets": 2,
+                  "reps": 10,
+                  "rest": 20
+                }
+              ],
+              "exercises": [
+                {
+                  "name": "Hip thrust",
+                  "sets": [
+                    {
+                      "kg": 20.0,
+                      "reps": 8,
+                      "rest": 120
+                    },
+                    {
+                      "kg": 20.0,
+                      "reps": 8,
+                      "rest": 120
+                    }
+                  ]
+                }
+              ],
+              "cooldownExercises": [
+                {
+                  "name": "Respiration",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 120
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "sessions": [
+            {
+              "logicalKey": "upper",
+              "name": "Upper",
+              "day": "Lundi",
+              "warmupExercises": [
+                {
+                  "name": "Mobilité des chevilles",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 45,
+                  "note": "Mouvement contrôlé."
+                },
+                {
+                  "name": "Squats sans charge",
+                  "type": "activation",
+                  "sets": 2,
+                  "reps": 10,
+                  "rest": 20
+                }
+              ],
+              "exercises": [
+                {
+                  "name": "Hip thrust",
+                  "sets": [
+                    {
+                      "kg": 42.5,
+                      "reps": 8,
+                      "rest": 120
+                    },
+                    {
+                      "kg": 42.5,
+                      "reps": 8,
+                      "rest": 120
+                    }
+                  ]
+                }
+              ],
+              "cooldownExercises": [
+                {
+                  "name": "Respiration",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 120
+                }
+              ]
+            },
+            {
+              "logicalKey": "lower",
+              "name": "Lower",
+              "day": "Mercredi",
+              "warmupExercises": [
+                {
+                  "name": "Mobilité des chevilles",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 45,
+                  "note": "Mouvement contrôlé."
+                },
+                {
+                  "name": "Squats sans charge",
+                  "type": "activation",
+                  "sets": 2,
+                  "reps": 10,
+                  "rest": 20
+                }
+              ],
+              "exercises": [
+                {
+                  "name": "Hip thrust",
+                  "sets": [
+                    {
+                      "kg": 32.5,
+                      "reps": 8,
+                      "rest": 120
+                    },
+                    {
+                      "kg": 32.5,
+                      "reps": 8,
+                      "rest": 120
+                    }
+                  ]
+                }
+              ],
+              "cooldownExercises": [
+                {
+                  "name": "Respiration",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 120
+                }
+              ]
+            },
+            {
+              "logicalKey": "full-body",
+              "name": "Full Body",
+              "day": "Samedi",
+              "warmupExercises": [
+                {
+                  "name": "Mobilité des chevilles",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 45,
+                  "note": "Mouvement contrôlé."
+                },
+                {
+                  "name": "Squats sans charge",
+                  "type": "activation",
+                  "sets": 2,
+                  "reps": 10,
+                  "rest": 20
+                }
+              ],
+              "exercises": [
+                {
+                  "name": "Hip thrust",
+                  "sets": [
+                    {
+                      "kg": 22.5,
+                      "reps": 8,
+                      "rest": 120
+                    },
+                    {
+                      "kg": 22.5,
+                      "reps": 8,
+                      "rest": 120
+                    }
+                  ]
+                }
+              ],
+              "cooldownExercises": [
+                {
+                  "name": "Respiration",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 120
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "sessions": [
+            {
+              "logicalKey": "upper",
+              "name": "Upper",
+              "day": "Lundi",
+              "warmupExercises": [
+                {
+                  "name": "Mobilité des chevilles",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 45,
+                  "note": "Mouvement contrôlé."
+                },
+                {
+                  "name": "Squats sans charge",
+                  "type": "activation",
+                  "sets": 2,
+                  "reps": 10,
+                  "rest": 20
+                }
+              ],
+              "exercises": [
+                {
+                  "name": "Hip thrust",
+                  "sets": [
+                    {
+                      "kg": 45.0,
+                      "reps": 8,
+                      "rest": 120
+                    },
+                    {
+                      "kg": 45.0,
+                      "reps": 8,
+                      "rest": 120
+                    }
+                  ]
+                }
+              ],
+              "cooldownExercises": [
+                {
+                  "name": "Respiration",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 120
+                }
+              ]
+            },
+            {
+              "logicalKey": "lower",
+              "name": "Lower",
+              "day": "Mercredi",
+              "warmupExercises": [
+                {
+                  "name": "Mobilité des chevilles",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 45,
+                  "note": "Mouvement contrôlé."
+                },
+                {
+                  "name": "Squats sans charge",
+                  "type": "activation",
+                  "sets": 2,
+                  "reps": 10,
+                  "rest": 20
+                }
+              ],
+              "exercises": [
+                {
+                  "name": "Hip thrust",
+                  "sets": [
+                    {
+                      "kg": 35.0,
+                      "reps": 8,
+                      "rest": 120
+                    },
+                    {
+                      "kg": 35.0,
+                      "reps": 8,
+                      "rest": 120
+                    }
+                  ]
+                }
+              ],
+              "cooldownExercises": [
+                {
+                  "name": "Respiration",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 120
+                }
+              ]
+            },
+            {
+              "logicalKey": "full-body",
+              "name": "Full Body",
+              "day": "Samedi",
+              "warmupExercises": [
+                {
+                  "name": "Mobilité des chevilles",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 45,
+                  "note": "Mouvement contrôlé."
+                },
+                {
+                  "name": "Squats sans charge",
+                  "type": "activation",
+                  "sets": 2,
+                  "reps": 10,
+                  "rest": 20
+                }
+              ],
+              "exercises": [
+                {
+                  "name": "Hip thrust",
+                  "sets": [
+                    {
+                      "kg": 25.0,
+                      "reps": 8,
+                      "rest": 120
+                    },
+                    {
+                      "kg": 25.0,
+                      "reps": 8,
+                      "rest": 120
+                    }
+                  ]
+                }
+              ],
+              "cooldownExercises": [
+                {
+                  "name": "Respiration",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 120
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "sessions": [
+            {
+              "logicalKey": "upper",
+              "name": "Upper",
+              "day": "Lundi",
+              "warmupExercises": [
+                {
+                  "name": "Mobilité des chevilles",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 45,
+                  "note": "Mouvement contrôlé."
+                },
+                {
+                  "name": "Squats sans charge",
+                  "type": "activation",
+                  "sets": 2,
+                  "reps": 10,
+                  "rest": 20
+                }
+              ],
+              "exercises": [
+                {
+                  "name": "Hip thrust",
+                  "sets": [
+                    {
+                      "kg": 47.5,
+                      "reps": 8,
+                      "rest": 120
+                    },
+                    {
+                      "kg": 47.5,
+                      "reps": 8,
+                      "rest": 120
+                    }
+                  ]
+                }
+              ],
+              "cooldownExercises": [
+                {
+                  "name": "Respiration",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 120
+                }
+              ]
+            },
+            {
+              "logicalKey": "lower",
+              "name": "Lower",
+              "day": "Mercredi",
+              "warmupExercises": [
+                {
+                  "name": "Mobilité des chevilles",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 45,
+                  "note": "Mouvement contrôlé."
+                },
+                {
+                  "name": "Squats sans charge",
+                  "type": "activation",
+                  "sets": 2,
+                  "reps": 10,
+                  "rest": 20
+                }
+              ],
+              "exercises": [
+                {
+                  "name": "Hip thrust",
+                  "sets": [
+                    {
+                      "kg": 37.5,
+                      "reps": 8,
+                      "rest": 120
+                    },
+                    {
+                      "kg": 37.5,
+                      "reps": 8,
+                      "rest": 120
+                    }
+                  ]
+                }
+              ],
+              "cooldownExercises": [
+                {
+                  "name": "Respiration",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 120
+                }
+              ]
+            },
+            {
+              "logicalKey": "full-body",
+              "name": "Full Body",
+              "day": "Samedi",
+              "warmupExercises": [
+                {
+                  "name": "Mobilité des chevilles",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 45,
+                  "note": "Mouvement contrôlé."
+                },
+                {
+                  "name": "Squats sans charge",
+                  "type": "activation",
+                  "sets": 2,
+                  "reps": 10,
+                  "rest": 20
+                }
+              ],
+              "exercises": [
+                {
+                  "name": "Hip thrust",
+                  "sets": [
+                    {
+                      "kg": 27.5,
+                      "reps": 8,
+                      "rest": 120
+                    },
+                    {
+                      "kg": 27.5,
+                      "reps": 8,
+                      "rest": 120
+                    }
+                  ]
+                }
+              ],
+              "cooldownExercises": [
+                {
+                  "name": "Respiration",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 120
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "sessions": [
+            {
+              "logicalKey": "upper",
+              "name": "Upper",
+              "day": "Lundi",
+              "warmupExercises": [
+                {
+                  "name": "Mobilité des chevilles",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 45,
+                  "note": "Mouvement contrôlé."
+                },
+                {
+                  "name": "Squats sans charge",
+                  "type": "activation",
+                  "sets": 2,
+                  "reps": 10,
+                  "rest": 20
+                }
+              ],
+              "exercises": [
+                {
+                  "name": "Hip thrust",
+                  "sets": [
+                    {
+                      "kg": 50.0,
+                      "reps": 8,
+                      "rest": 120
+                    },
+                    {
+                      "kg": 50.0,
+                      "reps": 8,
+                      "rest": 120
+                    }
+                  ]
+                }
+              ],
+              "cooldownExercises": [
+                {
+                  "name": "Respiration",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 120
+                }
+              ]
+            },
+            {
+              "logicalKey": "lower",
+              "name": "Lower",
+              "day": "Mercredi",
+              "warmupExercises": [
+                {
+                  "name": "Mobilité des chevilles",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 45,
+                  "note": "Mouvement contrôlé."
+                },
+                {
+                  "name": "Squats sans charge",
+                  "type": "activation",
+                  "sets": 2,
+                  "reps": 10,
+                  "rest": 20
+                }
+              ],
+              "exercises": [
+                {
+                  "name": "Hip thrust",
+                  "sets": [
+                    {
+                      "kg": 40.0,
+                      "reps": 8,
+                      "rest": 120
+                    },
+                    {
+                      "kg": 40.0,
+                      "reps": 8,
+                      "rest": 120
+                    }
+                  ]
+                }
+              ],
+              "cooldownExercises": [
+                {
+                  "name": "Respiration",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 120
+                }
+              ]
+            },
+            {
+              "logicalKey": "full-body",
+              "name": "Full Body",
+              "day": "Samedi",
+              "warmupExercises": [
+                {
+                  "name": "Mobilité des chevilles",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 45,
+                  "note": "Mouvement contrôlé."
+                },
+                {
+                  "name": "Squats sans charge",
+                  "type": "activation",
+                  "sets": 2,
+                  "reps": 10,
+                  "rest": 20
+                }
+              ],
+              "exercises": [
+                {
+                  "name": "Hip thrust",
+                  "sets": [
+                    {
+                      "kg": 30.0,
+                      "reps": 8,
+                      "rest": 120
+                    },
+                    {
+                      "kg": 30.0,
+                      "reps": 8,
+                      "rest": 120
+                    }
+                  ]
+                }
+              ],
+              "cooldownExercises": [
+                {
+                  "name": "Respiration",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 120
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "sessions": [
+            {
+              "logicalKey": "upper",
+              "name": "Upper",
+              "day": "Lundi",
+              "warmupExercises": [
+                {
+                  "name": "Mobilité des chevilles",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 45,
+                  "note": "Mouvement contrôlé."
+                },
+                {
+                  "name": "Squats sans charge",
+                  "type": "activation",
+                  "sets": 2,
+                  "reps": 10,
+                  "rest": 20
+                }
+              ],
+              "exercises": [
+                {
+                  "name": "Hip thrust",
+                  "sets": [
+                    {
+                      "kg": 52.5,
+                      "reps": 8,
+                      "rest": 120
+                    },
+                    {
+                      "kg": 52.5,
+                      "reps": 8,
+                      "rest": 120
+                    }
+                  ]
+                }
+              ],
+              "cooldownExercises": [
+                {
+                  "name": "Respiration",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 120
+                }
+              ]
+            },
+            {
+              "logicalKey": "lower",
+              "name": "Lower",
+              "day": "Mercredi",
+              "warmupExercises": [
+                {
+                  "name": "Mobilité des chevilles",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 45,
+                  "note": "Mouvement contrôlé."
+                },
+                {
+                  "name": "Squats sans charge",
+                  "type": "activation",
+                  "sets": 2,
+                  "reps": 10,
+                  "rest": 20
+                }
+              ],
+              "exercises": [
+                {
+                  "name": "Hip thrust",
+                  "sets": [
+                    {
+                      "kg": 42.5,
+                      "reps": 8,
+                      "rest": 120
+                    },
+                    {
+                      "kg": 42.5,
+                      "reps": 8,
+                      "rest": 120
+                    }
+                  ]
+                }
+              ],
+              "cooldownExercises": [
+                {
+                  "name": "Respiration",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 120
+                }
+              ]
+            },
+            {
+              "logicalKey": "full-body",
+              "name": "Full Body",
+              "day": "Samedi",
+              "warmupExercises": [
+                {
+                  "name": "Mobilité des chevilles",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 45,
+                  "note": "Mouvement contrôlé."
+                },
+                {
+                  "name": "Squats sans charge",
+                  "type": "activation",
+                  "sets": 2,
+                  "reps": 10,
+                  "rest": 20
+                }
+              ],
+              "exercises": [
+                {
+                  "name": "Hip thrust",
+                  "sets": [
+                    {
+                      "kg": 32.5,
+                      "reps": 8,
+                      "rest": 120
+                    },
+                    {
+                      "kg": 32.5,
+                      "reps": 8,
+                      "rest": 120
+                    }
+                  ]
+                }
+              ],
+              "cooldownExercises": [
+                {
+                  "name": "Respiration",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 120
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "sessions": [
+            {
+              "logicalKey": "upper",
+              "name": "Upper",
+              "day": "Lundi",
+              "warmupExercises": [
+                {
+                  "name": "Mobilité des chevilles",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 45,
+                  "note": "Mouvement contrôlé."
+                },
+                {
+                  "name": "Squats sans charge",
+                  "type": "activation",
+                  "sets": 2,
+                  "reps": 10,
+                  "rest": 20
+                }
+              ],
+              "exercises": [
+                {
+                  "name": "Hip thrust",
+                  "sets": [
+                    {
+                      "kg": 55.0,
+                      "reps": 8,
+                      "rest": 120
+                    },
+                    {
+                      "kg": 55.0,
+                      "reps": 8,
+                      "rest": 120
+                    }
+                  ]
+                }
+              ],
+              "cooldownExercises": [
+                {
+                  "name": "Respiration",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 120
+                }
+              ]
+            },
+            {
+              "logicalKey": "lower",
+              "name": "Lower",
+              "day": "Mercredi",
+              "warmupExercises": [
+                {
+                  "name": "Mobilité des chevilles",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 45,
+                  "note": "Mouvement contrôlé."
+                },
+                {
+                  "name": "Squats sans charge",
+                  "type": "activation",
+                  "sets": 2,
+                  "reps": 10,
+                  "rest": 20
+                }
+              ],
+              "exercises": [
+                {
+                  "name": "Hip thrust",
+                  "sets": [
+                    {
+                      "kg": 45.0,
+                      "reps": 8,
+                      "rest": 120
+                    },
+                    {
+                      "kg": 45.0,
+                      "reps": 8,
+                      "rest": 120
+                    }
+                  ]
+                }
+              ],
+              "cooldownExercises": [
+                {
+                  "name": "Respiration",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 120
+                }
+              ]
+            },
+            {
+              "logicalKey": "full-body",
+              "name": "Full Body",
+              "day": "Samedi",
+              "warmupExercises": [
+                {
+                  "name": "Mobilité des chevilles",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 45,
+                  "note": "Mouvement contrôlé."
+                },
+                {
+                  "name": "Squats sans charge",
+                  "type": "activation",
+                  "sets": 2,
+                  "reps": 10,
+                  "rest": 20
+                }
+              ],
+              "exercises": [
+                {
+                  "name": "Hip thrust",
+                  "sets": [
+                    {
+                      "kg": 35.0,
+                      "reps": 8,
+                      "rest": 120
+                    },
+                    {
+                      "kg": 35.0,
+                      "reps": 8,
+                      "rest": 120
+                    }
+                  ]
+                }
+              ],
+              "cooldownExercises": [
+                {
+                  "name": "Respiration",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 120
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "sessions": [
+            {
+              "logicalKey": "upper",
+              "name": "Upper",
+              "day": "Lundi",
+              "warmupExercises": [
+                {
+                  "name": "Mobilité des chevilles",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 45,
+                  "note": "Mouvement contrôlé."
+                },
+                {
+                  "name": "Squats sans charge",
+                  "type": "activation",
+                  "sets": 2,
+                  "reps": 10,
+                  "rest": 20
+                }
+              ],
+              "exercises": [
+                {
+                  "name": "Hip thrust",
+                  "sets": [
+                    {
+                      "kg": 57.5,
+                      "reps": 8,
+                      "rest": 120
+                    },
+                    {
+                      "kg": 57.5,
+                      "reps": 8,
+                      "rest": 120
+                    }
+                  ]
+                }
+              ],
+              "cooldownExercises": [
+                {
+                  "name": "Respiration",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 120
+                }
+              ]
+            },
+            {
+              "logicalKey": "lower",
+              "name": "Lower",
+              "day": "Mercredi",
+              "warmupExercises": [
+                {
+                  "name": "Mobilité des chevilles",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 45,
+                  "note": "Mouvement contrôlé."
+                },
+                {
+                  "name": "Squats sans charge",
+                  "type": "activation",
+                  "sets": 2,
+                  "reps": 10,
+                  "rest": 20
+                }
+              ],
+              "exercises": [
+                {
+                  "name": "Hip thrust",
+                  "sets": [
+                    {
+                      "kg": 47.5,
+                      "reps": 8,
+                      "rest": 120
+                    },
+                    {
+                      "kg": 47.5,
+                      "reps": 8,
+                      "rest": 120
+                    }
+                  ]
+                }
+              ],
+              "cooldownExercises": [
+                {
+                  "name": "Respiration",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 120
+                }
+              ]
+            },
+            {
+              "logicalKey": "full-body",
+              "name": "Full Body",
+              "day": "Samedi",
+              "warmupExercises": [
+                {
+                  "name": "Mobilité des chevilles",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 45,
+                  "note": "Mouvement contrôlé."
+                },
+                {
+                  "name": "Squats sans charge",
+                  "type": "activation",
+                  "sets": 2,
+                  "reps": 10,
+                  "rest": 20
+                }
+              ],
+              "exercises": [
+                {
+                  "name": "Hip thrust",
+                  "sets": [
+                    {
+                      "kg": 37.5,
+                      "reps": 8,
+                      "rest": 120
+                    },
+                    {
+                      "kg": 37.5,
+                      "reps": 8,
+                      "rest": 120
+                    }
+                  ]
+                }
+              ],
+              "cooldownExercises": [
+                {
+                  "name": "Respiration",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 120
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
