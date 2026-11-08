@@ -48,7 +48,7 @@ test('parcours séance et migration réelle V4 sans perte',async({page})=>{
   await page.locator(`[data-a="wheel"][data-f="${field}"]`).click();
   await page.locator('#wheel-direct').fill(value);await click(page,'wheel-save');
  }
- await click(page,'mode-detail');
+ await click(page,'toggle-mode');
  await expect(page.locator('.details-row').first()).toContainText('42,5');
  await expect(page.locator('.details-row').first()).toContainText('1:15');
  await page.locator('[data-a="validate"]').first().click();await click(page,'rest-skip');
@@ -84,12 +84,12 @@ test('vues responsive et captures',async({page},info)=>{
  await page.screenshot({path:info.outputPath('home.png')});
  await click(page,'home-start');await noOverflow(page);
  await page.locator('.set-pips').scrollIntoViewIfNeeded();
- const pips=await page.locator('.set-pips').boundingBox();const help=await page.locator('.workfoot').boundingBox();
- expect(pips!.y+pips!.height).toBeLessThanOrEqual(help!.y+1);
+ const pips=await page.locator('.set-pips').boundingBox();const nav=await page.locator('#tabbar').boundingBox();
+ expect(pips!.y+pips!.height).toBeLessThanOrEqual(nav!.y+1);
  await page.screenshot({path:info.outputPath('sport-series.png')});
  await page.locator('.page.workout').evaluate(el=>el.scrollTop=0);
  await page.screenshot({path:info.outputPath('sport.png')});
- await click(page,'mode-detail');await page.screenshot({path:info.outputPath('detail.png')});
+ await click(page,'toggle-mode');await page.screenshot({path:info.outputPath('detail.png')});
  await page.locator('[data-nav="program"]').click();await page.screenshot({path:info.outputPath('programs.png')});
  await click(page,'open-planning');await page.locator('#calendar-start').fill('2026-11-02');page.once('dialog',d=>d.accept());await click(page,'calendar-anchor');
  await page.clock.fastForward(3000);
