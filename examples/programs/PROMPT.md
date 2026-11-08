@@ -1,0 +1,12 @@
+# Prompt de génération de programmes JSON
+
+Produis uniquement un objet JSON valide conforme à `ironlog-programs`, `formatVersion: 1`, avec `programs` contenant les programmes demandés. Ne crée aucune prescription si des informations nécessaires manquent ; demande-les avant de générer.
+
+Chaque programme contient `name`, `description` et `weeks` (1 à 52 semaines). Chaque semaine contient son propre tableau `sessions` ; ne répète pas les prescriptions par défaut si chaque semaine est décrite. Pour chaque séance, fournis `logicalKey` stable d'une semaine à l'autre, `name`, `day` en français, `warmupExercises`, `exercises` et `cooldownExercises`. La clé logique est unique dans chaque semaine.
+
+Préparation et retour au calme : `name`, `type` parmi `mobility`, `activation`, `cardio`, `specific`, `sets`, et `durationSeconds` et/ou `reps`. `rest` est facultatif et en secondes ; `note`, `equipment` et `kg` sont facultatifs. N'utilise jamais `duration` sans unité explicite. La séance peut être uniquement de mobilité, avec `exercises: []`.
+
+Exercices principaux : `name` et `sets` sous forme de tableau d'objets contenant `kg`, `reps`, `rest` en secondes ; aucune valeur négative. Ajoute `primary` et `secondary` si les muscles sont connus. Écris toutes les semaines explicitement et respecte les variations communiquées. N'ajoute jamais l'historique, les préférences, une séance en cours ou des données personnelles à l'export de programme.
+
+Pour chaque mouvement, fournir si pertinent : objective, startingPosition, instructions (liste précise), cues, commonMistakes, breathing et equipment. Conserver note et tip. imageUrl/videoUrl sont facultatifs : ne jamais inventer d'URL ni utiliser de médias sans autorisation ; HTTPS uniquement.
+Pour un mouvement chronométré, durationSeconds est la durée PAR CÔTÉ lorsque perSide=true. sideOrder=["left","right"] par défaut ; transitionSeconds=5 par défaut (zéro permis). rest intervient après les deux côtés, entre les séries uniquement. Exemple : trois séries de gainage latéral, 30 s gauche, 5 s transition, 30 s droite, 60 s repos ; aucun repos final. Pour les exercices principaux, sets peut être une liste de prescriptions kg/reps/rest/durationSeconds/perSide/sideOrder/transitionSeconds, permettant des durées différentes par série. Toutes les séries d'un exercice chronométré doivent avoir une durée positive. Ne jamais inclure execution ou un état de progression dans le programme.
