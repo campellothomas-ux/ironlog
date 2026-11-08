@@ -6,9 +6,9 @@ test('confirmation, modes et roues cohérents, une activité persistante',async(
   await page.locator('[data-a="wheel"][data-f="kg"]').click();
   await page.locator('#wheel-direct').fill('72.5');
   await page.locator('[data-a="wheel-save"]').click();
-  await page.locator('[data-a="mode-detail"]').click();
+  await page.locator('[data-a="toggle-mode"]').click();
   await expect(page.locator('.details-row').first()).toContainText('72,5');
-  await page.locator('[data-a="mode-sport"]').click();
+  await page.locator('[data-a="toggle-mode"]').click();
   await expect(page.locator('.valuebox').first()).toContainText('72.5');
   await expect(page.locator('.set-pips .pip').last()).toBeVisible();
   page.once('dialog',dialog=>dialog.dismiss());
