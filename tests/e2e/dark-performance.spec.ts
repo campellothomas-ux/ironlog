@@ -31,7 +31,8 @@ test('thème anthracite monochrome et bascule Sport / Détail persistante',async
   expect(size!.height).toBe(44);
   const exheader=await page.locator('.exheader').boundingBox();
   const series=await page.locator('.sport-panel .setey').boundingBox();
-  expect(series!.y-(exheader!.y+exheader!.height)).toBeLessThan(30);
+  expect(series!.y-(exheader!.y+exheader!.height)).toBeGreaterThan(10);
+  expect(series!.y-(exheader!.y+exheader!.height)).toBeLessThan(170);
   await expect(switcher).toHaveAttribute('aria-checked','true');
   await switcher.click();
   await expect(page.locator('.details-row')).toHaveCount(4);
@@ -104,4 +105,36 @@ test('échec de stockage lors de la suppression : rien ne disparaît',async({pag
   await expect(page.getByRole('status')).toBeVisible();
   expect((await read(page)).programs).toHaveLength(2);
   await page.reload();expect((await read(page)).programs).toHaveLength(2);
+});
+
+test('mode Sport : équilibre des espaces verticaux sur grand écran et scroll sur petit écran',async({page})=>{
+  await page.setViewportSize({width:390,height:900});
+  await page.goto('/');
+  await page.locator('[data-a="home-start"]').click();
+  const layout=await page.evaluate(()=>{
+    const rect=(selector:string)=>document.querySelector(selector)!.getBoundingClientRect();
+    const screen=rect('.page.workout');
+    const heading=rect('.exheader');
+    const panel=rect('.sport-panel');
+    const perf=rect('.lastperf');
+    const pips=rect('.set-pips');
+    return {
+      headingToSeries:panel.top-heading.bottom,
+      seriesToPerf:perf.top-panel.bottom,
+      perfToPips:pips.top-perf.bottom,
+      pipsToBottom:screen.bottom-pips.bottom,
+      horizontalOverflow:document.documentElement.scrollWidth>window.innerWidth,
+    };
+  });
+  expect(layout.headingToSeries).toBeGreaterThan(20);
+  expect(layout.seriesToPerf).toBeGreaterThan(20);
+  expect(layout.perfToPips).toBeGreaterThan(20);
+  expect(layout.pipsToBottom).toBeGreaterThan(20);
+  expect(layout.pipsToBottom).toBeLessThan(150);
+  expect(layout.horizontalOverflow).toBe(false);
+  await page.setViewportSize({width:375,height:550});
+  await page.locator('.set-pips').scrollIntoViewIfNeeded();
+  await expect(page.locator('.pip').first()).toBeVisible();
+  await page.locator('.pip').last().click();
+  await expect(page.locator('.pip').last()).toHaveClass(/active/);
 });
