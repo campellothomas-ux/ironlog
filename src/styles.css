@@ -270,6 +270,27 @@ button[aria-pressed="true"],button[aria-selected="true"] { border-color:var(--ac
 .guided-detail p { line-height:1.6 }
 .guided-detail img,.guided-detail video { max-width:100%;height:auto;background:var(--card);border:1px solid var(--line) }
 
+/* PR #7.1 — vertical rhythm: use the height that is actually available, not extra content.
+   The content remains naturally scrollable on short displays and when text is enlarged. */
+.page.workout .exercise-strip { margin-bottom:clamp(4px, 1.25dvh, 12px) }
+.page.workout .exheader { padding-top:6px;padding-bottom:6px }
+.page.workout .workbody:has(> .sport-center) { flex:1 0 auto;min-height:min-content }
+.page.workout .sport-center {
+ flex:1 0 auto;
+ justify-content:space-evenly;
+ gap:clamp(12px, 1.8dvh, 22px);
+}
+.page.workout .sport-panel { padding:8px 0;gap:clamp(10px, 1.35dvh, 14px) }
+.page.workout .lastperf { padding:10px 8px;font-size:13px;line-height:1.45 }
+.page.workout .set-pips { gap:12px;padding:6px 0 }
+.page.workout .pip { width:48px;height:48px }
+/* Avoid sacrificing legibility/touch targets on compact iPhones: allow normal vertical scroll. */
+@media (max-height:600px) {
+ .page.workout .sport-center { justify-content:flex-start;gap:15px }
+ .page.workout .workbody:has(> .sport-center) { flex:0 0 auto }
+ .page.workout .exercise-strip { margin-bottom:5px }
+}
+
 /* Fixed canvas for iOS: vertical content scrolls; browser-level horizontal drift is suppressed.
    Exercise chips remain horizontally scrollable by deliberate touch. */
 .stage,.shell,.app,.viewport { max-width:100%;overflow-x:clip }
