@@ -255,7 +255,8 @@ button { color:var(--fg);-webkit-appearance:none;appearance:none }
 .exheader .mode-square:focus-visible { outline:2px solid var(--fg);outline-offset:2px }
 .page.workout .exheader .row { gap:8px }
 .page.workout .exheader .smallhead { line-height:1.18 }
-.page.workout .exheader button { color:var(--fg) }
+.page.workout .exheader button:not(.mode-square-on) { color:var(--fg) }
+.page.workout .exheader button.mode-square-on { background:var(--fg);color:var(--cream) }
 input[type="checkbox"],input[type="radio"] { accent-color:var(--accent) }
 button[aria-pressed="true"],button[aria-selected="true"] { border-color:var(--accent) }
 @media(max-width:375px) {
