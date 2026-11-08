@@ -23,3 +23,15 @@ Les blocs préparatoires sont stockés séparément des séries principales. Leu
 Les alias historiques du code V4 sont acceptés : `program`, `programs`, `days`, `weeks`, `sessions`, `workouts`, `durationWeeks`, `weekCount`, `weeksCount`, `mainExercises`, `exercise`, `label`, `weight`, `load`, `repetitions`, `restSeconds` et `series`. Les nombres décimaux fournis comme chaînes numériques simples sont acceptés ; les valeurs négatives, non numériques ou avec unités implicites sont refusées. Les noms manquants des formes historiques reçoivent les valeurs par défaut de V4. Le nouveau format exige des noms explicites.
 
 Aucun fichier V3 réel représentatif n'a été fourni. Les champs `warmupExercises`, `sets`, `reps`, `rest`, `duration` avec unité explicite et `note` sont adaptés lorsqu'ils respectent les structures décrites ; cela ne constitue pas une garantie de compatibilité complète V3. Toute durée ambiguë ou structure inconnue nécessitera une conversion explicite. Les sauvegardes complètes restent un parcours séparé dans Vous > Plus.
+
+## Exercices guidés et bilatéraux
+
+Le format reste en version 1. Les trois phases acceptent `objective`, `startingPosition`, `instructions` (liste de textes), `cues` (liste), `commonMistakes` (liste), `breathing`, `equipment`, `note`, `tip`, `imageUrl` et `videoUrl`. Les médias sont facultatifs, HTTPS sans identifiants ; ils ne doivent être fournis qu'avec une autorisation d'utilisation. Aucune URL n'est générée automatiquement.
+
+`durationSeconds` est la durée de travail **par côté** si `perSide: true`. `sideOrder` contient exactement `left` et `right` (défaut : gauche puis droite). `transitionSeconds` vaut 5 par défaut, accepte zéro. Un passage bilatéral est une seule série. Le repos suit les deux côtés, uniquement entre les séries.
+
+Les phases préparatoires conservent `sets` entier et une prescription commune. Les exercices principaux conservent `sets` entier (prescription commune) ou une liste d'objets : `{kg, reps, rest, durationSeconds, perSide, sideOrder, transitionSeconds}`. Les valeurs sur la série priment sur celles de l'exercice. Dans un exercice chronométré principal, toutes les séries ont une durée strictement positive ; les durées et repos peuvent varier selon la série. Le mélange répétitions/temps au sein du même exercice est refusé : utiliser deux exercices. Les anciennes séries `kg/reps/rest` restent compatibles.
+
+L'état `execution` est réservé à la séance active et aux sauvegardes, exclu des exports de programme. Il conserve l'ordre des étapes, l'index, l'échéance absolue, la pause et les étapes écoulées ou passées. Un temps écoulé n'est pas une preuve de réalisation : les séries principales sont confirmées explicitement. Les phases préparatoires ne contribuent pas aux records ni au tonnage ; les séries chronométrées principales sont également exclues des records de charge et du tonnage.
+
+Exemple complet : [bilateral-guided.json](../examples/programs/bilateral-guided.json). Le scénario dure 315 secondes : trois fois 30 + 5 + 30 secondes, deux repos de 60 secondes, sans repos final.

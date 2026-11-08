@@ -1,0 +1,98 @@
+{
+  "kind": "ironlog-programs",
+  "formatVersion": 1,
+  "programs": [
+    {
+      "name": "Gainage guidé — référence",
+      "weeks": [
+        {
+          "sessions": [
+            {
+              "name": "Préparation bilatérale",
+              "day": "Lundi",
+              "warmupExercises": [
+                {
+                  "name": "Gainage latéral",
+                  "type": "activation",
+                  "sets": 3,
+                  "durationSeconds": 30,
+                  "perSide": true,
+                  "sideOrder": [
+                    "left",
+                    "right"
+                  ],
+                  "transitionSeconds": 5,
+                  "rest": 60,
+                  "objective": "Améliorer la stabilité latérale du tronc.",
+                  "startingPosition": "Sur le côté, coude sous l’épaule, jambes allongées.",
+                  "instructions": [
+                    "Aligner épaules, bassin et chevilles.",
+                    "Soulever le bassin et maintenir cet alignement.",
+                    "Changer de côté pendant la transition."
+                  ],
+                  "cues": [
+                    "Garder le bassin haut.",
+                    "Maintenir la tête dans l’axe."
+                  ],
+                  "commonMistakes": [
+                    "Laisser descendre le bassin.",
+                    "Tourner les épaules vers le sol."
+                  ],
+                  "breathing": "Respirer régulièrement sans blocage."
+                }
+              ],
+              "exercises": [],
+              "cooldownExercises": [
+                {
+                  "name": "Respiration lente",
+                  "type": "mobility",
+                  "sets": 1,
+                  "durationSeconds": 60,
+                  "instructions": [
+                    "Se placer confortablement sur le dos.",
+                    "Respirer lentement sans forcer."
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Travail principal chronométré",
+              "day": "Jeudi",
+              "exercises": [
+                {
+                  "name": "Gainage latéral",
+                  "type": "activation",
+                  "sets": 3,
+                  "durationSeconds": 30,
+                  "perSide": true,
+                  "sideOrder": [
+                    "left",
+                    "right"
+                  ],
+                  "transitionSeconds": 5,
+                  "rest": 60,
+                  "objective": "Améliorer la stabilité latérale du tronc.",
+                  "startingPosition": "Sur le côté, coude sous l’épaule, jambes allongées.",
+                  "instructions": [
+                    "Aligner épaules, bassin et chevilles.",
+                    "Soulever le bassin et maintenir cet alignement.",
+                    "Changer de côté pendant la transition."
+                  ],
+                  "cues": [
+                    "Garder le bassin haut.",
+                    "Maintenir la tête dans l’axe."
+                  ],
+                  "commonMistakes": [
+                    "Laisser descendre le bassin.",
+                    "Tourner les épaules vers le sol."
+                  ],
+                  "breathing": "Respirer régulièrement sans blocage."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

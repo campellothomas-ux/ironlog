@@ -1,3 +1,4 @@
+import {validateGuidance} from './guidance';
 import {parseDate} from '../planning/dates';
 type Obj=Record<string,unknown>;
 export interface Preparation {[key:string]:unknown;name:string;type:'mobility'|'activation'|'cardio'|'specific';sets:number;reps?:number;durationSeconds?:number;rest?:number;kg?:number;note?:string;equipment?:string}
@@ -18,7 +19,7 @@ const id=(prefix:string)=>`${prefix}_${globalThis.crypto.randomUUID().replaceAll
 function secure(x:unknown,depth=0):void{if(depth>80)throw Error('Document trop imbriqué.');if(x&&typeof x==='object')for(const [k,v] of Object.entries(x)){if(['__proto__','constructor','prototype','history','workout','prefs','calendar'].includes(k))throw Error(`Propriété interdite dans un programme : ${k}.`);secure(v,depth+1);}}
 const days=['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
 export function validatePreparation(value:unknown,path:string):Preparation {
- const v=obj(value,path);const name=text(v.name??v.exercise??v.label,`${path} / nom`);
+ const v=obj(value,path);validateGuidance(v);const name=text(v.name??v.exercise??v.label,`${path} / nom`);
  const type=v.type??'specific';if(!['mobility','activation','cardio','specific'].includes(String(type)))throw Error(`${path} / type : valeur inconnue.`);
  if(v.duration!==undefined&&v.durationUnit!=='seconds'&&v.durationUnit!=='minutes')throw Error(`${path} / duration : précise durationUnit (seconds ou minutes).`);
  if(v.duration!==undefined&&v.durationSeconds!==undefined&&number(v.durationSeconds,`${path} / durationSeconds`)!==number(v.duration,`${path} / duration`)*(v.durationUnit==='minutes'?60:1))throw Error(`${path} : durées contradictoires.`);
@@ -26,16 +27,17 @@ export function validatePreparation(value:unknown,path:string):Preparation {
  const reps=optionalNumber(v.reps??v.repetitions,`${path} / reps`),sets=number(v.sets??1,`${path} / sets`);
  if(!Number.isInteger(sets)||sets<1||sets>100)throw Error(`${path} / sets : entier de 1 à 100 requis.`);
  if(duration===undefined&&reps===undefined)throw Error(`${path} : indique durationSeconds et/ou reps.`);
- return {...extras(v,['name','exercise','label','type','sets','reps','repetitions','duration','durationUnit','durationSeconds','rest','kg','note','equipment']),name,type:type as Preparation['type'],sets,...(reps===undefined?{}:{reps}),...(duration===undefined?{}:{durationSeconds:duration}),...(v.rest===undefined?{}:{rest:number(v.rest,`${path} / rest`)}),...(v.kg===undefined?{}:{kg:number(v.kg,`${path} / kg`)}),...(v.note===undefined?{}:{note:optionalText(v.note,`${path} / note`)}),...(v.equipment===undefined?{}:{equipment:optionalText(v.equipment,`${path} / equipment`)})};
+ return {...extras(v,['execution','name','exercise','label','type','sets','reps','repetitions','duration','durationUnit','durationSeconds','rest','kg','note','equipment']),name,type:type as Preparation['type'],sets,...(reps===undefined?{}:{reps}),...(duration===undefined?{}:{durationSeconds:duration}),...(v.rest===undefined?{}:{rest:number(v.rest,`${path} / rest`)}),...(v.kg===undefined?{}:{kg:number(v.kg,`${path} / kg`)}),...(v.note===undefined?{}:{note:optionalText(v.note,`${path} / note`)}),...(v.equipment===undefined?{}:{equipment:optionalText(v.equipment,`${path} / equipment`)})};
 }
 type Lookup=(name:string)=>{primary:string[];secondary:string[];tip:string};
 function exercise(value:unknown,path:string,lookup?:Lookup,legacy=false):Exercise {
- const x=obj(value,path),name=text(x.name||x.exercise||x.label||(legacy?'Exercice':undefined),`${path} / nom`);
- const set=(value:unknown,index:number):SetPrescription=>{const y=typeof value==='number'?{kg:value}:obj(value,`${path} / série ${index+1}`);return {...extras(y,['kg','weight','load','reps','repetitions','rest','restSeconds','done']),kg:number(y.kg??y.weight??y.load??0,`${path} / kg`),reps:number(y.reps??y.repetitions??x.reps??10,`${path} / reps`),rest:number(y.rest??y.restSeconds??x.rest??90,`${path} / rest`),done:false};};
+ const x=obj(value,path);validateGuidance(x);const name=text(x.name||x.exercise||x.label||(legacy?'Exercice':undefined),`${path} / nom`);
+ const set=(value:unknown,index:number):SetPrescription=>{const y=typeof value==='number'?{kg:value}:obj(value,`${path} / série ${index+1}`);const timing={...x,...y};validateGuidance(timing);return {...extras(y,['kg','weight','load','reps','repetitions','rest','restSeconds','done']),kg:number(y.kg??y.weight??y.load??0,`${path} / kg`),reps:number(y.reps??y.repetitions??x.reps??10,`${path} / reps`),rest:number(y.rest??y.restSeconds??x.rest??90,`${path} / rest`),done:false,...Object.fromEntries(['durationSeconds','perSide','sideOrder','transitionSeconds'].filter(k=>timing[k]!==undefined).map(k=>[k,timing[k]]))};};
  let sets:SetPrescription[];if(Array.isArray(x.sets))sets=x.sets.map(set);else{const count=number(x.sets??x.series??3,`${path} / sets`);if(!Number.isInteger(count)||count<1||count>100)throw Error(`${path} / sets : entier de 1 à 100 requis.`);sets=Array.from({length:count},(_,i)=>set(x,i));}
+ if(sets.some(s=>s.durationSeconds!==undefined)&&sets.some(s=>!(Number(s.durationSeconds)>0)))throw Error(`${path} : toutes les séries chronométrées doivent avoir une durée positive.`);
  if(!sets.length||sets.length>100)throw Error(`${path} : 1 à 100 séries requises.`);
  const muscles=(v:unknown,p:string)=>v===undefined?[]:arr(v,p).map(x=>text(x,p));
- if(x.tip!==undefined)optionalText(x.tip,`${path} / tip`);if(x.note!==undefined)optionalText(x.note,`${path} / note`);const meta=lookup?.(name);return {...(x.tip!==undefined&&x.note!==undefined?{note:x.note}:{}),...extras(x,['id','name','exercise','label','primary','secondary','tip','note','sets','series','kg','weight','load','reps','repetitions','rest','restSeconds']),id:id('ex'),name,primary:muscles(x.primary??meta?.primary,`${path} / primary`),secondary:muscles(x.secondary??meta?.secondary,`${path} / secondary`),tip:typeof (x.tip??x.note??meta?.tip)==='string'?String(x.tip??x.note??meta?.tip):'',sets};
+ if(x.tip!==undefined)optionalText(x.tip,`${path} / tip`);if(x.note!==undefined)optionalText(x.note,`${path} / note`);const meta=lookup?.(name);return {...(x.note!==undefined?{note:x.note}:{}),...extras(x,['execution','id','name','exercise','label','primary','secondary','tip','note','sets','series','kg','weight','load','reps','repetitions','rest','restSeconds']),id:id('ex'),name,primary:muscles(x.primary??meta?.primary,`${path} / primary`),secondary:muscles(x.secondary??meta?.secondary,`${path} / secondary`),tip:typeof (x.tip??x.note??meta?.tip)==='string'?String(x.tip??x.note??meta?.tip):'',sets};
 }
 function session(value:unknown,path:string,lookup?:Lookup,legacy=false):Session {
  const s=obj(value,path),name=text(s.name||s.title||s.label||(legacy?'Séance':undefined),`${path} / nom`);const d=s.day??'Lundi';
@@ -45,7 +47,7 @@ function session(value:unknown,path:string,lookup?:Lookup,legacy=false):Session 
  const cool=arr(s.cooldownExercises??[],`${path} / retour au calme`).map((v,i)=>validatePreparation(v,`${path} / retour au calme ${i+1}`));
  if(!warm.length&&!main.length&&!cool.length)throw Error(`${path} : au moins un mouvement est requis.`);
  const logicalKey=s.logicalKey===undefined?`${name.toLocaleLowerCase('fr')}|${day}`:text(s.logicalKey,`${path} / logicalKey`);
- return {...extras(s,['id','logicalKey','name','title','label','day','warmupExercises','exercises','mainExercises','cooldownExercises','prepState','restTimer']),id:id('session'),logicalKey,name,day,warmupExercises:warm,exercises:main,cooldownExercises:cool};
+ return {...extras(s,['id','logicalKey','name','title','label','day','warmupExercises','exercises','mainExercises','cooldownExercises','prepState','restTimer','execution']),id:id('session'),logicalKey,name,day,warmupExercises:warm,exercises:main,cooldownExercises:cool};
 }
 function program(value:unknown,path:string,lookup?:Lookup,legacy=false):Program {
  const outer=obj(value,path),x=outer.program!==undefined?obj(outer.program,path):outer;
@@ -65,5 +67,5 @@ export function importPrograms(value:unknown,lookup?:Lookup):Program[] {
  return items.map((item,i)=>program(item,`Programme ${i+1}`,lookup,root.kind===undefined));
 }
 export function exportPrograms(programs:Program[]){
- return {kind:'ironlog-programs',formatVersion:1,programs:programs.map(p=>({...extras(p,['id','name','description','startDate','weeks']),name:p.name,description:p.description,...(p.startDate?{startDate:p.startDate}:{}),weeks:p.weeks.map(w=>({...extras(w,['sessions']),sessions:w.sessions.map(s=>({...extras(s,['id','logicalKey','name','day','warmupExercises','exercises','cooldownExercises','prepState','restTimer']),logicalKey:s.logicalKey??`${s.name.toLocaleLowerCase('fr')}|${s.day}`,name:s.name,day:s.day,warmupExercises:clean(s.warmupExercises??[]),exercises:s.exercises.map(e=>({...extras(e,['id','name','primary','secondary','tip','sets']),name:e.name,primary:e.primary,secondary:e.secondary,tip:e.tip,sets:e.sets.map(z=>({...extras(z,['kg','reps','rest','done']),kg:z.kg,reps:z.reps,rest:z.rest}))})),cooldownExercises:clean(s.cooldownExercises??[])}))}))}))};
+ return {kind:'ironlog-programs',formatVersion:1,programs:programs.map(p=>({...extras(p,['id','name','description','startDate','weeks']),name:p.name,description:p.description,...(p.startDate?{startDate:p.startDate}:{}),weeks:p.weeks.map(w=>({...extras(w,['sessions']),sessions:w.sessions.map(s=>({...extras(s,['id','logicalKey','name','day','warmupExercises','exercises','cooldownExercises','prepState','restTimer','execution']),logicalKey:s.logicalKey??`${s.name.toLocaleLowerCase('fr')}|${s.day}`,name:s.name,day:s.day,warmupExercises:clean(s.warmupExercises??[]),exercises:s.exercises.map(e=>({...extras(e,['id','name','primary','secondary','tip','sets','execution']),name:e.name,primary:e.primary,secondary:e.secondary,tip:e.tip,sets:e.sets.map(z=>({...extras(z,['kg','reps','rest','done']),kg:z.kg,reps:z.reps,rest:z.rest}))})),cooldownExercises:clean(s.cooldownExercises??[])}))}))}))};
 }
