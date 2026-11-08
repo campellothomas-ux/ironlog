@@ -409,8 +409,7 @@ document.addEventListener('input',e=>{let el=e.target;if(el.dataset.ed)editValue
 document.addEventListener('change',e=>{let el=e.target;if(el.dataset.ed)editValueFromField(el);if(el.name==='edit-scope')ui.scope=el.value;if(el.id==='share-photo'&&el.files[0]){let reader=new FileReader();reader.onload=()=>{ui.photo=reader.result;drawShare()};reader.readAsDataURL(el.files[0])}if(el.id==='progress-select'){ui.progressExercise=el.value;renderModal()}});
 document.addEventListener('scroll',e=>{if(e.target.id==='wheelList')updateWheel(e.target)},true);
 document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('[role="button"][data-a]')){e.preventDefault();handleAction(e.target)}if(e.key==='Escape'&&ui.modal&&ui.modal!=='rest'){ui.modal=null;renderModal()}});
-let startTouch=null;document.addEventListener('touchstart',e=>{if(!e.target.closest('#workout-swipe')||e.target.closest('.exercise-list')||e.target.closest('.valuebox')||e.target.closest('.details-rows')){startTouch=null;return}startTouch={x:e.touches[0].clientX,y:e.touches[0].clientY}},{passive:true});
-document.addEventListener('touchend',e=>{if(!startTouch||!db.workout||ui.modal)return;let dx=e.changedTouches[0].clientX-startTouch.x,dy=e.changedTouches[0].clientY-startTouch.y;if(Math.abs(dx)>65&&Math.abs(dx)>Math.abs(dy)*1.35)setExercise(db.workout.exIndex+(dx<0?1:-1));startTouch=null},{passive:true});
+// Navigation entre exercices uniquement via les boutons explicites, sans balayage latéral involontaire.
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){restStorageFailed=false;tick()}});
 window.addEventListener('pageshow',()=>{restStorageFailed=false;tick()});
 syncRest();if(rest.active&&!rest.minimized)ui.modal='rest';render();tick();setInterval(tick,250);
