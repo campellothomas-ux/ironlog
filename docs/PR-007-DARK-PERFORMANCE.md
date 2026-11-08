@@ -22,9 +22,11 @@ La vue principale n'affiche plus de bloc « Consignes et démonstration » ni le
 
 Le bouton ⓘ ouvre la fiche de l'exercice **avec les conseils immédiatement visibles**, et conserve les informations musculaires, les médias disponibles et les dernières performances. Les consignes continuent d'être accessibles dans la préparation guidée.
 
-Un contrôle compact `role="switch"` propose `OFF | ON` et le libellé `MODE SPORT` sous le contrôle :
+Un **bouton carré 44 × 44 px** `role="switch"`, placé directement **à côté de ⇄ Remplacer et ⓘ Informations**, affiche une seule valeur : `ON` ou `OFF`. Il n'a pas de ligne ni de légende en dessous ; son nom accessible reste « Mode sport ».
 - ON : vue Sport avec une série à la fois et les roues de saisie ;
 - OFF : vue Détail avec toutes les séries modifiables.
+
+Sur les exercices exclusivement chronométrés, le bouton est masqué puisque les modes Sport/Détail n'altèrent pas l'interface de leur minuteur.
 
 La valeur persiste dans les champs existants `db.prefs.mode` et `db.workout.mode`.
 
@@ -57,3 +59,17 @@ La suppression ne peut pas être annulée via un bouton. Pour pouvoir récupére
 7. Ne **pas** supprimer ni réinstaller l'icône iPhone : les données restent locales à l'origine PWA actuelle.
 
 Les tests Chromium ne remplacent pas une vérification Safari physique. La PR doit être évaluée sur une Deploy Preview avant fusion dans `main`.
+
+## Correctif ergonomique : écran figé et espace utile (retour iPhone)
+
+- Sur l'écran Séance, masquer le bandeau `IRONLOG` redondant, puisque le nom de la séance est déjà dans l'en-tête ; réserver l'espace de sécurité iOS `safe-area-inset-top` à la zone de contenu.
+- Dans les autres écrans, réduire le bandeau global à environ 44 px (hors marge de sécurité de l'appareil).
+- Remonter immédiatement les informations `SÉRIE / KG / REPS / REPOS` après l'en-tête de l'exercice : retrait de la rangée ON/OFF et suppression du centrage vertical du bloc Sport.
+- Empêcher le zoom accidentel de page via la métadonnée viewport `maximum-scale=1, user-scalable=no`, tout en laissant iOS gérer d'éventuels agrandissements liés aux réglages d'accessibilité (le contrôle du navigateur n'est jamais absolu).
+- Bloquer les débordements et déplacements **horizontaux de la page** ; maintenir le **défilement vertical** des écrans, les roues de réglage, les modales, et le défilement horizontal explicite des onglets/liste d'exercices.
+- Supprimer le geste implicite de balayage gauche/droite qui modifiait l'exercice en cours ; garder les flèches et les boutons de sélection.
+- Les barres supérieure/inférieure de Safari sont des éléments du navigateur : l'app web ne peut pas les supprimer depuis un onglet Safari. L'installation « sur l'écran d'accueil » offre un affichage PWA plus immersif, mais il ne faut pas supprimer l'installation de production sans sauvegarde vérifiée.
+
+### Tests ciblés
+
+Vérifier la géométrie du bouton 44 × 44 px à droite de ⓘ, son nom accessible et ses états ON/OFF, la conservation du mode après rechargement, la disparition de l'en-tête global **uniquement pendant une séance**, le gain d'espace avant la première série, l'absence de débordement horizontal, la possibilité de naviguer verticalement dans l'application et l'accès aux valeurs modifiables, même sur petit écran.
