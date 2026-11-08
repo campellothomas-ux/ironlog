@@ -15,7 +15,7 @@ test('aperçu sans mutation, séance avec préparation persistante et activité'
  await expect(page.locator('.page.workout')).toContainText('Mobilité des chevilles');await page.screenshot({path:info.outputPath('warmup.png')});await page.locator('[data-a="prep-timer"]').click();await page.clock.fastForward(10000);await expect(page.locator('[data-preptime]')).toHaveText('0:35');
  await page.reload();await page.locator('[data-a="resume"]').click();await expect(page.locator('[data-preptime]')).toHaveText('0:35');
  await page.locator('[data-a="prep-done"]').click();await expect(page.locator('.page.workout')).toContainText('Squats sans charge');await page.locator('[data-a="prep-done"]').click();await expect(page.locator('.page.workout')).toContainText('Passages confirmés 1 / 2');await page.locator('[data-a="prep-skip"]').click();
- await expect(page.locator('[data-a="mode-sport"]')).toBeVisible();await expect(page.locator('.valuebox').first()).toContainText('35');
+ await expect(page.locator('[data-a="toggle-mode"]')).toBeVisible();await expect(page.locator('.valuebox').first()).toContainText('35');
  await page.locator('[data-a="validate"]').click();await page.locator('[data-a="rest-skip"]').click();await page.locator('[data-a="prep-open-cooldown"]').click();await page.locator('[data-a="prep-done"]').click();
  page.once('dialog',dialog=>dialog.accept());await page.locator('[data-a="work-finish"]').last().click();await expect(page.locator('.activity')).toHaveCount(1);
  state=await read(page);expect(state.history[0].prepState.warmup[0].donePasses).toBe(1);expect(state.history[0].prepState.warmup[1].skipped).toBe(true);expect(state.history[0].exercises[0].sets.filter((x:{done:boolean})=>x.done)).toHaveLength(1);
