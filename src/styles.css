@@ -1,7 +1,7 @@
 @import "./tokens.css";
 
 * { box-sizing:border-box }
-html,body { margin:0;width:100%;height:100%;font-family:var(--body);background:var(--bg);color:var(--fg);-webkit-text-size-adjust:100% }
+html,body { margin:0;width:100%;height:100%;font-family:var(--body);background:var(--bg);color:var(--fg);-webkit-text-size-adjust:100%;overflow-x:hidden;overscroll-behavior-x:none }
 button,input,select,textarea { font:inherit;font-size:16px }
 button { cursor:pointer;-webkit-tap-highlight-color:transparent }
 button:disabled { opacity:.4;cursor:default }
@@ -22,16 +22,16 @@ a { color:var(--accent) }
 .shell { width:440px;flex:0 0 440px;border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--bg);box-shadow:var(--shadow) }
 .app { height:880px;max-height:calc(100dvh - 64px);border-radius:var(--radius-lg);overflow:hidden;position:relative;display:flex;flex-direction:column;background:var(--bg);isolation:isolate }
 .app:before { display:none }
-.apphead { position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;min-height:56px;padding:12px 20px;padding-top:calc(12px + env(safe-area-inset-top,0px));flex-shrink:0;border-bottom:1px solid var(--line) }
-.logo { font:800 23px/1 var(--head);letter-spacing:-1px }
+.apphead { position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;min-height:44px;padding:7px 16px;padding-top:calc(7px + env(safe-area-inset-top,0px));flex-shrink:0;border-bottom:1px solid var(--line) }
+.logo { font:800 18px/1 var(--head);letter-spacing:-.6px }
 .logo span { color:var(--fg) }
 .headright { display:none }
 .headright b { color:var(--sand);font-weight:500 }
 .viewport { flex:1;min-height:0;position:relative;z-index:1 }
 .page { height:100%;overflow-y:auto;padding:24px 20px;overscroll-behavior-y:contain;scroll-padding-block:16px }
 .page::-webkit-scrollbar { display:none }
-.page.workout { overflow-y:auto;display:flex;flex-direction:column;padding:12px;gap:10px }
-.tabbar { z-index:5;position:relative;flex-shrink:0;min-height:var(--nav-height);padding:4px 8px calc(4px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:var(--bg);border-top:1px solid var(--fg) }
+.page.workout { overflow-y:auto;display:flex;flex-direction:column;padding:calc(9px + env(safe-area-inset-top,0px)) 12px 12px;gap:8px }
+.tabbar { z-index:5;position:relative;flex-shrink:0;min-height:var(--nav-height);padding:4px 8px calc(4px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:var(--bg);border-top:1px solid var(--line) }
 .tab { position:relative;border:0;border-radius:var(--radius-sm);background:transparent;display:flex;flex-direction:column;gap:5px;justify-content:center;align-items:center;color:var(--muted);font-size:12px;font-weight:500;min-height:55px }
 .tab span:first-child { font-size:22px;line-height:1 }
 .tab.active { color:var(--fg);background:transparent;font-weight:700 }
@@ -44,7 +44,7 @@ a { color:var(--accent) }
 .sm { font-size:14px;line-height:1.5 }
 .card { padding:16px 0;border:0;border-top:1px solid var(--line);background:transparent;margin-bottom:12px }
 .card.soft { background:transparent }
-.hero { padding:20px 0;border:0;border-top:2px solid var(--fg);border-bottom:1px solid var(--line);background:transparent }
+.hero { padding:20px 0;border:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:transparent }
 .hero .big { font:800 30px/1.08 var(--head);text-transform:uppercase;letter-spacing:-1px;margin:16px 0 12px }
 .hero .sub { font:400 12px/1.6 var(--mono);color:var(--muted) }
 .row { display:flex;align-items:center;gap:8px;min-width:0 }
@@ -52,11 +52,11 @@ a { color:var(--accent) }
 .stack { display:flex;flex-direction:column;gap:10px }
 .hlabel { font:22px/1.08 var(--head);letter-spacing:.2px }
 .ey { font:600 11px/1.4 var(--mono);color:var(--muted);text-transform:uppercase }
-.btn { background:transparent;color:var(--fg);border:1px solid var(--fg);padding:12px;min-height:44px;font-size:12px;font-weight:700;border-radius:0;line-height:1.35;text-transform:uppercase }
+.btn { background:transparent;color:var(--fg);border:1px solid var(--line);padding:12px;min-height:44px;font-size:12px;font-weight:700;border-radius:0;line-height:1.35;text-transform:uppercase }
 .btn.primary { color:var(--cream);background:var(--dark);border-color:var(--dark) }
 .btn.dark { background:var(--bg) }
-.btn.outline { background:transparent;border-color:var(--fg) }
-.btn.danger { color:var(--red);border-color:var(--line) }
+.btn.outline { background:transparent;border-color:var(--line) }
+.btn.danger { color:var(--fg);border-color:var(--muted);border-style:dashed }
 .btn.block { width:100% }
 .btn.mini { font-size:13px;min-height:44px;padding:10px }
 .btn.icon { width:44px;height:44px;padding:0;font-size:20px;display:grid;place-items:center;flex-shrink:0 }
@@ -85,14 +85,14 @@ a { color:var(--accent) }
 .exchip { flex-shrink:0;min-height:44px;max-width:200px;border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--card);color:var(--muted);font-size:12px;font-weight:600;padding:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;scroll-snap-align:center }
 .exchip.active { background:var(--card2);color:var(--fg);border-color:var(--accent-deep) }
 .exarrow { width:44px;height:44px;border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--card);flex-shrink:0;font-size:24px }
-.exheader { flex:0 0 auto;background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:4px 0 12px }
+.exheader { flex:0 0 auto;background:transparent;border:0;border-radius:0;padding:2px 0 }
 .exheader .smallhead { font-size:19px;line-height:1.25;overflow-wrap:anywhere }
 .exsub { color:var(--muted);font-size:12px;margin-top:5px }
 .exheader button { width:44px;height:44px;min-width:44px;border-radius:var(--radius-sm);border:1px solid var(--line);background:var(--card);color:var(--sand);font-size:20px }
 .infobtn { font-size:10px;border:none;background:none;color:var(--accent);text-align:left;padding:7px 0 0;min-height:30px }
-.workbody { display:flex;flex-direction:column;flex:1 0 auto;gap:10px }
-.sport-center { display:flex;flex-direction:column;flex:1 0 auto;justify-content:center;gap:8px }
-.sport-panel { display:flex;flex-direction:column;gap:10px;border:0;border-top:1px solid var(--fg);border-bottom:1px solid var(--line);border-radius:0;background:transparent;padding:12px 0 }
+.workbody { display:flex;flex-direction:column;flex:0 0 auto;gap:8px }
+.sport-center { display:flex;flex-direction:column;flex:0 0 auto;justify-content:flex-start;gap:8px }
+.sport-panel { display:flex;flex-direction:column;gap:9px;border:0;border-radius:0;background:transparent;padding:5px 0 }
 .setey { text-align:left;color:var(--muted);font:600 11px/1.4 var(--mono);text-transform:uppercase }
 .values { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px }
 .valuebox { border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:0;min-width:0;padding:12px 2px;min-height:88px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px }
@@ -164,7 +164,7 @@ a { color:var(--accent) }
 .statbox span { font-size:12px;color:var(--muted) }
 .chart { width:100%;height:185px;border-bottom:1px solid var(--line) }
 .chartnotes { font-size:10px;color:var(--muted);margin-top:9px }
-.segmented { display:flex;gap:0;margin:12px 0;padding:0;background:transparent;border-radius:0;border:1px solid var(--fg) }
+.segmented { display:flex;gap:0;margin:12px 0;padding:0;background:transparent;border-radius:0;border:1px solid var(--line) }
 .segmented button { flex:1;min-height:44px;border:0;border-radius:0;background:transparent;color:var(--muted);font-size:13px;font-weight:600;padding:10px 4px }
 .segmented button.active { background:var(--dark);color:var(--cream);box-shadow:none }
 .musclegrid { display:grid;grid-template-columns:1fr 1fr;gap:7px }
@@ -240,3 +240,64 @@ button { color:var(--fg);-webkit-appearance:none;appearance:none }
 
 .calendar-day.selected .activity-dot { background:var(--cream);border-color:var(--cream) }
 .calendar-day.selected .planned-dot { border-color:var(--cream) }
+
+/* One 44px ON/OFF action next to replace and info; no dedicated toggle row. */
+.exheader .mode-square {
+  width:44px;height:44px;min-width:44px;
+  display:grid;place-items:center;padding:0;
+  font:700 12px/1 var(--mono);
+  letter-spacing:.02em;
+  border:1px solid var(--line);
+  border-radius:0;
+}
+.exheader .mode-square-on { background:var(--fg);color:var(--cream) }
+.exheader .mode-square-off { background:var(--card);color:var(--fg) }
+.exheader .mode-square:focus-visible { outline:2px solid var(--fg);outline-offset:2px }
+.page.workout .exheader .row { gap:8px }
+.page.workout .exheader .smallhead { line-height:1.18 }
+.page.workout .exheader button:not(.mode-square-on) { color:var(--fg) }
+.page.workout .exheader button.mode-square-on { background:var(--fg);color:var(--cream) }
+input[type="checkbox"],input[type="radio"] { accent-color:var(--accent) }
+button[aria-pressed="true"],button[aria-selected="true"] { border-color:var(--accent) }
+@media(max-width:375px) {
+ .page.workout .worktitle { font-size:15px }
+}
+
+/* Guided exercise detail is displayed from the information dialog, not in the main workout. */
+.guided-detail { display:flex;flex-direction:column;gap:10px;padding:14px 0;border-top:1px solid var(--line);margin:12px 0 }
+.guided-detail h3 { color:var(--fg);font-size:14px;margin-top:8px }
+.guided-detail ul { margin:0;padding-left:22px;color:var(--fg);font-size:14px;line-height:1.6 }
+.guided-detail p { line-height:1.6 }
+.guided-detail img,.guided-detail video { max-width:100%;height:auto;background:var(--card);border:1px solid var(--line) }
+
+/* PR #7.1 — vertical rhythm: use the height that is actually available, not extra content.
+   The content remains naturally scrollable on short displays and when text is enlarged. */
+.page.workout .exercise-strip { margin-bottom:clamp(4px, 1.25dvh, 12px) }
+.page.workout .exheader { padding-top:6px;padding-bottom:6px }
+.page.workout .workbody:has(> .sport-center) { flex:1 0 auto;min-height:min-content }
+.page.workout .sport-center {
+ flex:1 0 auto;
+ justify-content:space-evenly;
+ gap:clamp(12px, 1.8dvh, 22px);
+}
+.page.workout .sport-panel { padding:8px 0;gap:clamp(10px, 1.35dvh, 14px) }
+.page.workout .lastperf { padding:10px 8px;font-size:13px;line-height:1.45 }
+.page.workout .set-pips { gap:12px;padding:6px 0 }
+.page.workout .pip { width:48px;height:48px }
+/* Avoid sacrificing legibility/touch targets on compact iPhones: allow normal vertical scroll. */
+@media (max-height:600px) {
+ .page.workout .sport-center { justify-content:flex-start;gap:15px }
+ .page.workout .workbody:has(> .sport-center) { flex:0 0 auto }
+ .page.workout .exercise-strip { margin-bottom:5px }
+}
+
+/* Fixed canvas for iOS: vertical content scrolls; browser-level horizontal drift is suppressed.
+   Exercise chips remain horizontally scrollable by deliberate touch. */
+.stage,.shell,.app,.viewport { max-width:100%;overflow-x:clip }
+.page,.overlaybody,.sheet { overflow-x:hidden;overscroll-behavior-x:none }
+.exercise-list,.subnav { overscroll-behavior-x:contain }
+.app:has(.page.workout) .apphead { display:none }
+@media (max-height:740px) {
+ .page.workout { padding:calc(8px + env(safe-area-inset-top,0px)) 12px 10px;gap:7px }
+ .sport-panel { padding:4px 0;gap:8px }
+}
