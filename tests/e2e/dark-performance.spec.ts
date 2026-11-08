@@ -25,7 +25,7 @@ test('thème anthracite monochrome et bascule Sport / Détail persistante',async
   await expect(page.locator('.valuebox')).toHaveCount(3);
   await page.locator('[data-a="info-ex"]').click();
   await expect(page.getByRole('dialog')).toContainText('CONSEILS TECHNIQUES');
-  await expect(page.getByRole('dialog')).toContainText('Consignes');
+  await expect(page.getByRole('dialog')).toContainText('Conseils');
 });
 test('impossible de supprimer le dernier programme',async({page})=>{
   await page.goto('/');await page.locator('[data-nav="program"]').click();
