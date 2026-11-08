@@ -73,3 +73,20 @@ Les tests Chromium ne remplacent pas une vérification Safari physique. La PR do
 ### Tests ciblés
 
 Vérifier la géométrie du bouton 44 × 44 px à droite de ⓘ, son nom accessible et ses états ON/OFF, la conservation du mode après rechargement, la disparition de l'en-tête global **uniquement pendant une séance**, le gain d'espace avant la première série, l'absence de débordement horizontal, la possibilité de naviguer verticalement dans l'application et l'accès aux valeurs modifiables, même sur petit écran.
+
+## PR #7.1 — Rééquilibrage vertical du mode Sport
+
+Retour de recette iPhone : les commandes compactées ont laissé une grande zone vide sous le sélecteur de séries tandis que l'exercice et sa validation restaient tassés en haut.
+
+**Correction ergonomique sans ajout de fonctionnalités** :
+- Le bloc de travail `SÉRIE / KG / REPS / REPOS / VALIDER` conserve sa hiérarchie dominante.
+- Les trois zones (`séries + validation`, `dernier résultat/charge prévue`, `pastilles de séries`) se répartissent automatiquement sur **la hauteur réellement disponible** via Flexbox et des espacements proportionnels.
+- Une respiration plus grande est réservée entre navigation, nom de l'exercice et début du bloc de travail.
+- Le rappel de performance est légèrement plus lisible (13 px).
+- Les pastilles sont élargies de 44 à **48 px**, avec des espacements mieux équilibrés.
+- Sur les petits écrans (hauteur ≤ 600 px), revenir à une disposition compacte avec défilement vertical naturel. Aucune commande ne doit être coupée ou inaccessible.
+- Ne pas insérer de nouveau widget, statistique ou carte pour remplir artificiellement l'espace.
+
+Tests de géométrie du mode Sport sur hauteur 900 px et navigation des séries sur hauteur 550 px, en complément des autres tests E2E et de la recette Safari iPhone.
+
+Aucune modification de données personnelles, de logique de séance, de stockage ni de PR #5.
