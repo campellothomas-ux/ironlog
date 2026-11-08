@@ -37,7 +37,7 @@ test('impossible de supprimer le dernier programme',async({page})=>{
 test('annuler puis confirmer supprime uniquement le programme et son calendrier',async({page})=>{
   await page.goto('/');
   await addProgram(page,'À supprimer');
-  let before=await read(page);expect(before.programs).toHaveLength(2);
+  const before=await read(page);expect(before.programs).toHaveLength(2);
   page.once('dialog',dialog=>dialog.dismiss());
   await page.locator('[data-a="delete-plan"]').click();
   expect((await read(page)).programs).toHaveLength(2);
