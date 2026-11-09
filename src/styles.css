@@ -301,3 +301,13 @@ button[aria-pressed="true"],button[aria-selected="true"] { border-color:var(--ac
  .page.workout { padding:calc(8px + env(safe-area-inset-top,0px)) 12px 10px;gap:7px }
  .sport-panel { padding:4px 0;gap:8px }
 }
+
+/* PR #8: exercise-specific notes, intentionally collapsed to preserve the Sport layout. */
+.exercise-note { margin:10px 0 6px;padding:10px 0;border-top:1px solid var(--line);flex:0 0 auto }
+.exercise-note summary { min-height:42px;display:flex;align-items:center;cursor:pointer;color:var(--muted);font:600 12px/1.4 var(--mono);letter-spacing:.03em }
+.exercise-note[open] summary { color:var(--fg) }
+.exercise-note textarea { font-size:16px;line-height:1.5;max-width:100% }
+.exercise-history-note { color:var(--fg);background:var(--card);border-left:2px solid var(--muted);padding:10px;margin:10px 0 4px;font-size:13px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere }
+.history-edit-set { display:grid;grid-template-columns:26px repeat(3,minmax(0,1fr)) 44px;gap:5px;align-items:center;margin:6px 0 }
+.history-edit-set input[type=number] { width:100%;min-width:0;font-size:14px;padding:9px 3px;text-align:center }
+.history-edit-set input[type=checkbox] { width:22px;height:22px;margin:auto;accent-color:var(--accent) }
