@@ -323,3 +323,12 @@ button[aria-pressed="true"],button[aria-selected="true"] { border-color:var(--ac
 .wheel-manual input { width:105px;font-size:16px }
 .timer-config-actions { flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0 }
 .timer-config-actions .btn { min-height:44px;flex:1 1 auto }
+
+/* PR #8.2 — Add an exercise without leaving the workout.
+   Inline 44px control preserves the compact workout header and iPhone touch targets. */
+.exercise-strip .exarrow-add { border-color:var(--muted);color:var(--fg);font-weight:600;font-size:24px }
+.exercise-strip .exarrow-add:focus-visible { outline:2px solid var(--fg);outline-offset:2px }
+@media (max-width:375px) {
+ .exercise-strip { gap:4px }
+ .exercise-list { min-width:0 }
+}
