@@ -42,3 +42,21 @@ La suppression n'a pas de bouton d'annulation après confirmation ; exporter une
 - Exporter puis restaurer une sauvegarde contenant des notes et des exercices personnalisés.
 
 **PR en brouillon jusqu'à validation Safari iPhone réelle. Ne pas fusionner automatiquement ; ne pas reprendre la PR #5 Web Push.**
+
+## PR #8.1 — Basculer REPS / CHRONO dans la séance (retour utilisateur)
+
+Quand on touche la valeur **RÉPÉTITIONS** du mode Sport ou d'une ligne du mode Détail, la feuille de réglage propose désormais **RÉPÉTITIONS | CHRONO**. La bascule est volontaire et n'est persistée qu'après validation.
+
+- **Répétitions** : la roue habituelle reste inchangée, et n'ajuste que la série ciblée si le mode n'est pas modifié.
+- **Chrono** : saisie d'une durée de travail en secondes (1 à 3 600), valeur par défaut de **30 s**. La conversion s'applique aux séries de **l'exercice courant**, conserve les temps de repos individuels et permet de lancer l'exécution automatique existante.
+- **Par côté** : case facultative. Chaque série fait travail gauche → **transition 5 s** → travail droite → repos, sans repos après la dernière série. Une seule série est confirmée pour les deux côtés.
+- L'écran de minuterie possède **« ⏱ Durée / Mode »** pour modifier la durée et revenir éventuellement aux répétitions, ainsi qu'un accès au repos.
+- Un chrono **actif ou en pause** ne peut pas être reconfiguré avant d'avoir été arrêté. Une modification après exécution demande confirmation et réinitialise l'état chronométré et les validations de cet exercice.
+- Un changement CHRONO → RÉPÉTITIONS retire les champs temporisés et ramène l'affichage et les contrôles habituels.
+- Les séances programmées, les autres exercices et l'historique ne sont **pas modifiés** par le réglage en direct.
+- Les séries chronométrées sont affichées en durée dans l'historique, plutôt que comme « 0 répétition », et n'augmentent pas le tonnage musculaire.
+- Un exercice personnalisé est créé avec **0 kg et 10 répétitions** plutôt que de reprendre les charges d'un mouvement remplacé.
+
+**Contrôles ajoutés :** tests unitaires de conversion dans `tests/exercise-prescription.test.ts`, et tests E2E `tests/e2e/reps-chrono.spec.ts` (création de gainage, chrono bilatéral 30/5/30, retour aux répétitions, suspension de modification en cours de chrono, persistance après rechargement et repos préservé).
+
+**Pas de changement du schéma JSON `ironlog-programs` ni de fusion automatique.** Tester la feuille de réglage et les minuteurs réels sur Safari iPhone avant validation.
