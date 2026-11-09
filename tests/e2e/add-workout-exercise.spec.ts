@@ -66,7 +66,6 @@ test('création rapide pendant une séance : saisie du nom seule puis chrono bil
  await page.locator('[data-nav="home"]').click();
  await page.locator('[data-a="resume"]').click();
  expect((await current(page)).workout.exercises.at(-1).execution).toBeDefined();
- await page.locator('[data-a="work-finish"]').first().click({force:true}).catch(()=>{});
 });
 
 test('l’ajout est non destructif si on ferme ou si le stockage échoue',async({page})=>{
