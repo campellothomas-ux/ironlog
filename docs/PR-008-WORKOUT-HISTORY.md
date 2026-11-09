@@ -60,3 +60,20 @@ Quand on touche la valeur **RÉPÉTITIONS** du mode Sport ou d'une ligne du mode
 **Contrôles ajoutés :** tests unitaires de conversion dans `tests/exercise-prescription.test.ts`, et tests E2E `tests/e2e/reps-chrono.spec.ts` (création de gainage, chrono bilatéral 30/5/30, retour aux répétitions, suspension de modification en cours de chrono, persistance après rechargement et repos préservé).
 
 **Pas de changement du schéma JSON `ironlog-programs` ni de fusion automatique.** Tester la feuille de réglage et les minuteurs réels sur Safari iPhone avant validation.
+
+## PR #8.2 — Ajouter un exercice sans quitter la séance
+
+Retour utilisateur du 9 novembre : permettre d'ajouter un exercice non prévu pendant un entraînement.
+
+- Un **bouton carré ＋ de 44 px** figure dans la barre de navigation des exercices, à droite de la flèche suivante. La largeur de la liste est automatiquement réduite mais le défilement horizontal des noms reste possible.
+- Appuyer sur ＋ ouvre « AJOUTER UN EXERCICE » avec les exercices du catalogue et la bibliothèque personnelle. Sélectionner un élément **l'ajoute à la fin de la séance** et ouvre immédiatement sa fiche en cours d'entraînement. Aucun exercice existant n'est remplacé.
+- En tête de liste : « ＋ CRÉER UN EXERCICE ». Seul le nom (100 caractères maximum) est demandé. Le nouvel exercice est ajouté à la séance **et à la bibliothèque personnelle** (pour les futurs ajouts et remplacements).
+- Valeurs initiales : **3 séries, 0 kg, 10 répétitions, 90 s de repos**, entièrement modifiables via les contrôles habituels. Le changement **REPS ↔ CHRONO**, les transitions bilatérales, les notes et le guidage restent disponibles.
+- L'ajout concerne **l'entraînement en cours uniquement**, pas le programme multi-semaines ni ses dates. L'exercice ajouté sera conservé dans l'historique après validation de l'activité et dans les sauvegardes JSON.
+- Les minuteries des autres exercices et le chrono de repos restent inchangés ; le nouvel exercice reçoit son propre identifiant.
+- Les données sont validées et **écrites dans localStorage avant leur application en mémoire**. Annulation/fermeture de la modale et échec de stockage n'ajoutent rien. Limite de sécurité : 100 exercices dans une séance.
+- L'option est volontairement placée dans la **phase principale**, pas dans les phases d'échauffement ou de retour au calme, où l'interface guidée est distincte.
+
+Tests E2E : `tests/e2e/add-workout-exercise.spec.ts` (catalogue, création par nom, conversion en gainage chronométré, rechargement, conservation du programme et historique, échec de stockage).
+
+Aucune modification du format des programmes, des records ni de la production ; la PR #8 reste en brouillon jusqu'à validation iPhone.
