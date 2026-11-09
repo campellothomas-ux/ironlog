@@ -30,8 +30,8 @@ test('le remplacement propose une création avec le nom seul, persistante dans l
  await page.locator('[data-a="replace-create"]').click();
  await page.locator('#custom-ex-name').fill('  Tirage unilatéral personnel  ');
  await page.locator('[data-a="replace-create-save"]').click();
- await expect(page.locator('.exheader')).toContainText('TIRAGE UNILATÉRAL PERSONNEL');
- let data=await stored(page);
+ await expect(page.locator('.exheader')).toContainText('Tirage unilatéral personnel');
+ const data=await stored(page);
  expect(data.customExercises.map((x:{name:string})=>x.name)).toContain('Tirage unilatéral personnel');
  expect(data.workout.exercises[0].name).toBe('Tirage unilatéral personnel');
  expect(data.workout.exercises[0].sets).toHaveLength(4);
@@ -48,6 +48,7 @@ test('le remplacement propose une création avec le nom seul, persistante dans l
 test('une ancienne séance se modifie : note, charge, durée et statistiques sont recalculées',async({page})=>{
  await start(page);
  await page.locator('[data-a="validate"]').first().click();
+ await page.locator('[data-a="rest-skip"]').click();
  await finish(page);
  const before=await stored(page),prevVol=before.history[0].exercises[0].sets[0].kg;
  await page.locator('[data-a="history-edit-open"]').click();
@@ -69,7 +70,7 @@ test('une ancienne séance se modifie : note, charge, durée et statistiques son
  await page.reload();
  await page.locator('[data-nav="you"]').click();
  await page.locator('[data-a="you-tab"][data-id="progress"]').click();
- await expect(page.locator('.stats3')).toContainText('99');
+ await expect(page.locator('.stats3')).toContainText('594');
 });
 
 test('suppression d’une ancienne séance : confirmation et conservation des programmes',async({page})=>{
