@@ -11,6 +11,19 @@ describe('sauvegarde et restauration',()=>{
   expect(makeBackup(parsed.data).data).toEqual(state);
   expect(backupName(new Date(2026,10,6,22,15))).toBe('ironlog-backup-2026-11-06-2215.json');
  });
+ it('préserve les notes personnelles et la bibliothèque des exercices créés',()=>{
+  const state=sampleState();
+  const next={
+    ...state,
+    customExercises:[{name:'Tirage maison',primary:['Autres'],secondary:[],tip:''}],
+    history:state.history.map(h=>({...h,exercises:h.exercises.map(e=>({...e,trainingNote:'Très bonne sensation'}))})),
+    workout:{...state.workout,exercises:state.workout.exercises.map(e=>({...e,trainingNote:'Noter les charges la prochaine fois'}))},
+  };
+  expect(parseBackup(JSON.stringify(makeBackup(next))).data).toEqual(next);
+  const invalid={...next,history:next.history.map(h=>({...h,exercises:h.exercises.map(e=>({...e,trainingNote:'A'.repeat(2001)}))}))};
+  expect(()=>validateState(invalid)).toThrow('note');
+  expect(()=>validateState({...next,customExercises:[{name:'',primary:['Autres'],secondary:[],tip:''}]})).toThrow('nom');
+ });
  it('préserve le chrono lié à la séance dans une sauvegarde complète',()=>{
   const state=sampleState();const timer=startRestTimer('cycle_1',state.workout.startedAt,90,1760000000000);
   const withTimer={...state,workout:{...state.workout,restTimer:timer}};
