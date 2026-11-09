@@ -9,19 +9,19 @@ const valid=(n:number,min:number,max:number,label:string)=>{
  if(!Number.isFinite(n)||!Number.isInteger(n)||n<min||n>max)throw Error(label+' invalide');
  return n;
 };
-export function setTimedExercise<S extends EditableSet>(sets:S[],durationSeconds:number,perSide:boolean):S[]{
+export function setTimedExercise(sets:EditableSet[],durationSeconds:number,perSide:boolean):EditableSet[]{
  valid(durationSeconds,1,3600,'Durée');if(typeof perSide!=='boolean')throw Error('Mode bilatéral invalide');
  if(!sets.length)throw Error('Exercice sans série');
  return sets.map(set=>{
   const prev=set.durationSeconds?set.repsBeforeTimer??set.reps:set.reps;
   return {...set,reps:0,repsBeforeTimer:prev,done:false,durationSeconds,perSide,
-   ...(perSide?{sideOrder:set.sideOrder??['left','right'],transitionSeconds:set.transitionSeconds??5}:{})} as S;
+   ...(perSide?{sideOrder:set.sideOrder??['left','right'],transitionSeconds:set.transitionSeconds??5}:{})};
  }).map(set=>{
   if(!perSide){delete set.sideOrder;delete set.transitionSeconds;}
   return set;
  });
 }
-export function setRepetitionExercise<S extends EditableSet>(sets:S[],reps:number):S[]{
+export function setRepetitionExercise(sets:EditableSet[],reps:number):EditableSet[]{
  valid(reps,0,100,'Répétitions');if(!sets.length)throw Error('Exercice sans série');
  return sets.map(set=>{
   const result={...set,reps,done:false};
